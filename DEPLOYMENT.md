@@ -14,23 +14,21 @@ Secondary domains:
    - `mouadh.org`
    - `mouadh.info`
    - `mouadh.shop`
-2. Inspect the existing public GitHub repo `mbsoft31/mouadh.tech` before overwriting or force-pushing anything.
-3. Decide the final deploy target:
-   - GitHub Pages;
-   - Cloudflare Pages;
-   - Hostinger static hosting.
+2. Confirm the VPS target and SSH access.
+3. Point the canonical `.org` DNS records at the VPS.
 
 ## Recommended Deploy Path
 
-Use Cloudflare Pages or GitHub Pages for the Astro static site.
+Use the VPS Docker deployment for the canonical site.
 
 Preferred operating model:
 
 1. Git repository contains the Astro source.
 2. Build command: `npm run build`.
 3. Output directory: `dist`.
-4. Primary custom domain: `mouadh.org`.
-5. Redirect aliases point to the primary domain.
+4. Docker builds the static site and serves it with Nginx.
+5. Caddy terminates HTTPS for `mouadh.org` and `www.mouadh.org`.
+6. Redirect aliases point to the primary domain after the main site is live.
 
 ## DNS Intent
 
@@ -106,16 +104,32 @@ Check that canonical URLs and RSS links use `https://mouadh.org`.
 
 ## Docker VPS Option
 
-This repo includes a minimal Docker deployment:
+This repo includes the production Docker deployment:
 
 - `Dockerfile`: builds the Astro static site and serves it with Nginx.
-- `compose.yaml`: runs the site on `127.0.0.1:8080`.
+- `compose.yaml`: runs the site container and a Caddy HTTPS proxy.
+- `Caddyfile`: serves `mouadh.org` and `www.mouadh.org` with automatic HTTPS.
 - `nginx.conf`: static-file server config.
 
 Expected server pattern:
 
-1. Existing public reverse proxy terminates HTTPS for `mouadh.org`.
-2. Reverse proxy forwards to `http://127.0.0.1:8080`.
-3. This app container serves static files only.
+1. Docker Compose builds `mouadh-org-site`.
+2. Caddy binds public ports `80` and `443`.
+3. Caddy forwards traffic to the internal site container.
+4. Caddy stores ACME certificates in Docker volumes.
 
-Do not bind this container directly to public port 80 until the VPS proxy state is inspected.
+Deploy on the VPS:
+
+```bash
+git clone https://github.com/mbsoft31/mouadh.org.git /srv/mouadh.org
+cd /srv/mouadh.org
+docker compose up -d --build
+```
+
+Then verify:
+
+```bash
+docker compose ps
+curl -I http://mouadh.org/
+curl -I https://mouadh.org/
+```

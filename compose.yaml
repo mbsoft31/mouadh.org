@@ -1,8 +1,27 @@
 services:
   site:
     build: .
+    image: mouadh-org-site:latest
     container_name: mouadh-org-site
     restart: unless-stopped
-    ports:
-      - "127.0.0.1:8080:80"
+    expose:
+      - "80"
 
+  caddy:
+    image: caddy:2.10-alpine
+    container_name: mouadh-org-caddy
+    restart: unless-stopped
+    depends_on:
+      - site
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
