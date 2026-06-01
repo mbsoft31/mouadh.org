@@ -1,6 +1,6 @@
 ---
-title: Nexus Scholar Public Surface - 2026-05-31
-description: Evidence packet behind the first public Nexus Scholar writing and profile positioning.
+title: Nexus Scholar Public Evidence - May 2026
+description: Public evidence packet for Nexus Scholar positioning, GitHub curation, safe claims, and repository proof.
 pubDate: 2026-06-01
 tags:
   - Evidence
@@ -51,6 +51,7 @@ Verified current `mbsoft31` pins:
 - Nexus Scholar is a Laravel/PHP ecosystem for systematic literature review workflows.
 - Public work includes packages and applications around search, screening, deduplication, citation graphs, full-text retrieval, reference management, and exports.
 - The PhD research lane involves plant-disease AI and computer vision, with public claims kept benchmark-safe.
+- The personal site is deployed from `mbsoft31/mouadh.org` to a VPS using Docker Compose, Nginx, and Caddy HTTPS.
 
 ## Claims To Avoid
 
@@ -59,4 +60,3 @@ Verified current `mbsoft31` pins:
 - field deployment or agricultural decision support;
 - exact unpublished methods or future experiments;
 - private roadmap details.
-

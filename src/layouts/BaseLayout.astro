@@ -3,7 +3,7 @@ import '../styles/global.css';
 
 const {
   title = 'Mouadh Bekhouche',
-  description = 'Laravel/PHP backend engineering, Nexus Scholar, and evidence-first research workflow tooling.'
+  description = 'Laravel/PHP backend engineering, Nexus Scholar, systematic review tooling, and guarded plant-disease AI research.'
 } = Astro.props;
 
 const siteTitle = title === 'Mouadh Bekhouche' ? title : `${title} - Mouadh Bekhouche`;
@@ -32,7 +32,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         <div class="site-header-inner">
           <a class="brand" href="/" aria-label="Mouadh Bekhouche home">
             <strong>Mouadh Bekhouche</strong>
-            <span>Laravel/PHP, Nexus Scholar, research workflow tooling</span>
+            <span>Laravel/PHP backend, Nexus Scholar, research tooling</span>
           </a>
           <nav class="nav" aria-label="Primary navigation">
             <a href="/writing/">Writing</a>
@@ -48,7 +48,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       </main>
       <footer class="site-footer">
         <div class="site-footer-inner">
-          <span>Evidence-first writing about backend systems and research tooling.</span>
+          <span>Backend systems, research workflow software, and public project evidence.</span>
           <span>
             <a href="https://github.com/nexus-scholar">Nexus Scholar</a>
             /
@@ -59,4 +59,3 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     </div>
   </body>
 </html>
-

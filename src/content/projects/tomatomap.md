@@ -1,6 +1,6 @@
 ---
-title: TomatoMAP Workflow Archive
-description: Downstream research workflow and benchmark artifacts around TomatoMAP, framed with careful upstream attribution and publication-safe boundaries.
+title: TomatoMAP Research Lane
+description: Guarded public research surface for plant-disease AI and computer vision, with careful dataset provenance and benchmark-safe wording.
 pubDate: 2026-06-01
 tags:
   - Plant-Disease AI
@@ -30,6 +30,10 @@ This project is useful as evidence of:
 - research workflow organization;
 - public/private boundary awareness.
 
+## Public Boundary
+
+The public site can mention the broad research area, the benchmark discipline, and the existence of reproducible workflow artifacts. It should not describe exact unpublished methods, private experiment plans, or claims that are not yet supported by final results.
+
 ## What To Avoid
 
 Avoid public claims about:
@@ -39,4 +43,3 @@ Avoid public claims about:
 - broad SOTA claims before final evidence;
 - future weak-label or pseudo-label experiments as if completed;
 - exact unpublished thesis methods.
-

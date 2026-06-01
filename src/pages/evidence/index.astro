@@ -10,13 +10,13 @@ const entries = (await getCollection('evidence', ({ data }) => !data.draft))
 <BaseLayout title="Evidence" description="Evidence packets supporting public claims about projects, posts, and research tooling.">
   <section class="section">
     <p class="eyebrow">Evidence</p>
-    <h1>Source notes behind public claims.</h1>
+    <h1>Public claims should have receipts.</h1>
     <p class="lede">
-      These notes keep writing grounded in repositories, commits, verified artifacts, and claim boundaries.
+      Evidence packets collect the repos, commits, deployment checks, and boundaries behind public
+      positioning. They are here to keep the site useful rather than promotional.
     </p>
   </section>
   <section class="section tight">
     <EntryList entries={entries} basePath="evidence" />
   </section>
 </BaseLayout>
-

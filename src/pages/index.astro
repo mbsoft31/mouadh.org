@@ -9,22 +9,23 @@ const writing = (await getCollection('writing', ({ data }) => !data.draft))
 
 const projects = (await getCollection('projects', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, 3);
+  .slice(0, 4);
 ---
 
 <BaseLayout>
   <section class="section">
     <div class="intro-grid">
       <div>
-        <p class="eyebrow">Senior Laravel/PHP backend engineering and research software</p>
-        <h1>Mouadh Bekhouche builds evidence-first research workflow systems.</h1>
+        <p class="eyebrow">Laravel/PHP backend engineer and research software builder</p>
+        <h1>I build backend systems for research workflows, scholarly data, and domain-heavy products.</h1>
         <p class="lede">
-          I work across Laravel/PHP backend systems, Nexus Scholar, systematic literature review tooling,
-          and plant-disease AI research with careful public boundaries.
+          My active public work is Nexus Scholar: a Laravel/PHP ecosystem for systematic reviews,
+          citation graphs, reference management, and auditable research workflows. I also take on
+          focused Laravel backend contracts to fund and sharpen that research work.
         </p>
         <div class="actions">
-          <a class="button" href="/writing/">Read the writing</a>
-          <a class="button secondary" href="/projects/">Inspect projects</a>
+          <a class="button" href="/projects/nexus-scholar/">Open Nexus Scholar</a>
+          <a class="button secondary" href="/writing/why-nexus-scholar-laravel-php/">Read the technical note</a>
         </div>
       </div>
       <figure class="system-visual">
@@ -35,29 +36,28 @@ const projects = (await getCollection('projects', ({ data }) => !data.draft))
     <div class="note-strip" aria-label="Current focus areas">
       <div>
         <strong>Nexus Scholar</strong>
-        <span>Laravel/PHP tooling for systematic review workflows and research audit trails.</span>
+        <span>Core package, CLI workspace, web shell, graph packages, and reference tooling.</span>
       </div>
       <div>
-        <strong>Backend Systems</strong>
-        <span>Domain-heavy APIs, SaaS MVPs, package boundaries, and workflow infrastructure.</span>
+        <strong>Contract Work</strong>
+        <span>Laravel APIs, SaaS MVPs, integrations, package boundaries, and workflow infrastructure.</span>
       </div>
       <div>
-        <strong>Research Evidence</strong>
-        <span>Plant-disease AI and academic tooling with benchmark-safe public claims.</span>
+        <strong>Research Boundary</strong>
+        <span>Plant-disease AI is public only at a benchmark-safe level; unpublished methods stay controlled.</span>
       </div>
     </div>
   </section>
 
   <section class="section tight">
     <p class="eyebrow">Writing</p>
-    <h2>Recent notes</h2>
+    <h2>Technical notes tied to real work</h2>
     <EntryList entries={writing} basePath="writing" />
   </section>
 
   <section class="section tight">
     <p class="eyebrow">Projects</p>
-    <h2>Public proof surfaces</h2>
+    <h2>Curated public work</h2>
     <EntryList entries={projects} basePath="projects" />
   </section>
 </BaseLayout>
-
