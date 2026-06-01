@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EntryList from '../../components/EntryList.astro';
+
+const entries = (await getCollection('writing', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout title="Writing" description="Technical writing on Laravel/PHP, Nexus Scholar, systematic reviews, and research workflow tooling.">
+  <section class="section">
+    <p class="eyebrow">Writing</p>
+    <h1>Evidence-first technical notes.</h1>
+    <p class="lede">
+      Posts here should connect to real repositories, commits, experiments, screenshots, or source artifacts.
+    </p>
+  </section>
+  <section class="section tight">
+    <EntryList entries={entries} basePath="writing" />
+  </section>
+</BaseLayout>
+

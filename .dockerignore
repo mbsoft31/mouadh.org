@@ -1,0 +1,11 @@
+node_modules
+dist
+.astro
+.playwright-cli
+output
+.git
+.env
+.env.*
+.astro-dev-server.pid
+npm-debug.log*
+

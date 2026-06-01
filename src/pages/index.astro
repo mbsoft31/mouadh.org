@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EntryList from '../components/EntryList.astro';
+
+const writing = (await getCollection('writing', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+const projects = (await getCollection('projects', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+
+<BaseLayout>
+  <section class="section">
+    <div class="intro-grid">
+      <div>
+        <p class="eyebrow">Senior Laravel/PHP backend engineering and research software</p>
+        <h1>Mouadh Bekhouche builds evidence-first research workflow systems.</h1>
+        <p class="lede">
+          I work across Laravel/PHP backend systems, Nexus Scholar, systematic literature review tooling,
+          and plant-disease AI research with careful public boundaries.
+        </p>
+        <div class="actions">
+          <a class="button" href="/writing/">Read the writing</a>
+          <a class="button secondary" href="/projects/">Inspect projects</a>
+        </div>
+      </div>
+      <figure class="system-visual">
+        <img src="/assets/nexus-workflow.svg" alt="Nexus Scholar workflow map connecting core, CLI, web, graph packages, reference management, and evidence artifacts." />
+      </figure>
+    </div>
+
+    <div class="note-strip" aria-label="Current focus areas">
+      <div>
+        <strong>Nexus Scholar</strong>
+        <span>Laravel/PHP tooling for systematic review workflows and research audit trails.</span>
+      </div>
+      <div>
+        <strong>Backend Systems</strong>
+        <span>Domain-heavy APIs, SaaS MVPs, package boundaries, and workflow infrastructure.</span>
+      </div>
+      <div>
+        <strong>Research Evidence</strong>
+        <span>Plant-disease AI and academic tooling with benchmark-safe public claims.</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <p class="eyebrow">Writing</p>
+    <h2>Recent notes</h2>
+    <EntryList entries={writing} basePath="writing" />
+  </section>
+
+  <section class="section tight">
+    <p class="eyebrow">Projects</p>
+    <h2>Public proof surfaces</h2>
+    <EntryList entries={projects} basePath="projects" />
+  </section>
+</BaseLayout>
+

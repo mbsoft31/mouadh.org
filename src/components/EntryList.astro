@@ -1,0 +1,33 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+type Entry =
+  | CollectionEntry<'writing'>
+  | CollectionEntry<'projects'>
+  | CollectionEntry<'evidence'>;
+
+const { entries, basePath } = Astro.props as {
+  entries: Entry[];
+  basePath: string;
+};
+
+const formatDate = (date: Date) =>
+  new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: 'numeric' }).format(date);
+---
+
+<div class="content-grid">
+  {entries.map((entry: Entry) => (
+    <article class="list-item">
+      <div class="meta">{formatDate(entry.data.pubDate)}</div>
+      <h3>
+        <a href={`/${basePath}/${entry.id}/`}>{entry.data.title}</a>
+      </h3>
+      <p>{entry.data.description}</p>
+      {entry.data.tags?.length ? (
+        <div class="tag-list" aria-label="Tags">
+          {entry.data.tags.map((tag: string) => <span class="tag">{tag}</span>)}
+        </div>
+      ) : null}
+    </article>
+  ))}
+</div>

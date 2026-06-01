@@ -1,0 +1,62 @@
+---
+import '../styles/global.css';
+
+const {
+  title = 'Mouadh Bekhouche',
+  description = 'Laravel/PHP backend engineering, Nexus Scholar, and evidence-first research workflow tooling.'
+} = Astro.props;
+
+const siteTitle = title === 'Mouadh Bekhouche' ? title : `${title} - Mouadh Bekhouche`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title="Mouadh Bekhouche writing" href="/rss.xml" />
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/assets/nexus-workflow.svg', Astro.site)} />
+    <title>{siteTitle}</title>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <div class="site-header-inner">
+          <a class="brand" href="/" aria-label="Mouadh Bekhouche home">
+            <strong>Mouadh Bekhouche</strong>
+            <span>Laravel/PHP, Nexus Scholar, research workflow tooling</span>
+          </a>
+          <nav class="nav" aria-label="Primary navigation">
+            <a href="/writing/">Writing</a>
+            <a href="/projects/">Projects</a>
+            <a href="/evidence/">Evidence</a>
+            <a href="/about/">About</a>
+            <a href="https://github.com/nexus-scholar">GitHub</a>
+          </nav>
+        </div>
+      </header>
+      <main>
+        <slot />
+      </main>
+      <footer class="site-footer">
+        <div class="site-footer-inner">
+          <span>Evidence-first writing about backend systems and research tooling.</span>
+          <span>
+            <a href="https://github.com/nexus-scholar">Nexus Scholar</a>
+            /
+            <a href="https://github.com/mbsoft31">mbsoft31</a>
+          </span>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
+

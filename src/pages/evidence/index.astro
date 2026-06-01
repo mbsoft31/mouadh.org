@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EntryList from '../../components/EntryList.astro';
+
+const entries = (await getCollection('evidence', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout title="Evidence" description="Evidence packets supporting public claims about projects, posts, and research tooling.">
+  <section class="section">
+    <p class="eyebrow">Evidence</p>
+    <h1>Source notes behind public claims.</h1>
+    <p class="lede">
+      These notes keep writing grounded in repositories, commits, verified artifacts, and claim boundaries.
+    </p>
+  </section>
+  <section class="section tight">
+    <EntryList entries={entries} basePath="evidence" />
+  </section>
+</BaseLayout>
+
