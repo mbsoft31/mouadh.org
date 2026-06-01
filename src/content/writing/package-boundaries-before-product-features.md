@@ -1,6 +1,6 @@
 ---
 title: Package Boundaries Before Product Features
-description: "Why reusable package boundaries are a better foundation than rushing every idea into the hosted product."
+description: "Why research products should separate reusable domain logic from the CLI, web app, and hosted product surface."
 pubDate: 2026-06-01
 tags:
   - Architecture
@@ -10,72 +10,81 @@ evidence:
   - nexus-scholar-public-surface-2026-05-31
 ---
 
-It is tempting to build product features directly into the hosted app.
+Product features are easier to show than package boundaries. A dashboard screenshot is visible. A clean internal package is not.
 
-That can be fast at the beginning. It can also make the system hard to reuse, hard to test, and hard to explain.
+But if you are building research workflow software, the package boundaries may matter more than the first product feature.
 
-For Nexus Scholar, package boundaries matter before product features.
+The reason is simple: research workflows usually need multiple surfaces. A CLI, a web app, background jobs, exports, and public demos may all need the same domain behavior. If that behavior lives only inside the first UI, the system becomes hard to extend.
 
-## The Product Is Not The Only Surface
+## The UI Should Not Own The Domain
 
-Nexus Scholar has several public surfaces:
+A common early product mistake is letting the web app become the architecture. Controllers call providers directly. UI actions contain screening rules. Export logic lives in download endpoints. Graph generation is tied to a chart component.
 
-- core package;
-- CLI workspace;
-- hosted web shell;
-- graph packages;
-- reference-management package;
-- evidence pages.
+That can work for a prototype, but it creates problems quickly:
 
-If all logic lives only in the hosted web app, the CLI becomes weak and the packages become decorative.
+- CLI commands cannot reuse the workflow cleanly;
+- tests have to go through the web layer;
+- background jobs duplicate logic;
+- hosted and local modes drift apart;
+- public packages become thin wrappers around hidden product code.
 
-The workflow should be reusable across surfaces.
+When the UI owns the domain, every new surface becomes a rewrite.
 
-## Packages Force Better Questions
+## Packages Create Reusable Centers Of Gravity
 
-A package boundary forces the system to answer:
+A package boundary gives one part of the system a clear responsibility.
 
-- What is the input?
-- What is the output?
-- Which dependencies are allowed?
-- What can be tested without a full app?
-- Which errors should be explicit?
-- Which policies are configurable?
+For a research tool, useful package boundaries might include:
 
-Those questions make the design better.
+- provider search and normalization;
+- reference parsing and bibliography export;
+- graph operations;
+- deduplication logic;
+- screening decision models;
+- corpus locking;
+- artifact manifests.
 
-## The Hosted App Should Compose
+Each package does not need to be perfect on day one. It needs to have a reason to exist and a stable enough contract that other surfaces can use it.
 
-The hosted app should compose workflows, not own every rule.
+## Product Features Become Thinner
 
-It can handle:
+When the core behavior lives in packages, product features become coordination layers.
 
-- authentication;
-- team workspaces;
-- UI flows;
-- dashboards;
-- hosted storage;
-- collaboration;
-- product operations.
+A CLI command can call the provider package, write a run record, and save an artifact.
 
-The reusable workflow logic should stay closer to packages.
+A web action can call the same provider package, queue the job, and show progress to the user.
 
-## Boundaries Help Open Source Strategy
+An evidence page can reference the artifact without pretending the screenshot is the source of truth.
 
-Package boundaries also help the public/private split.
+This makes the system easier to explain. The product is not a pile of screens. It is a set of workflows over reusable domain capabilities.
 
-Reusable workflow packages can stay open. Hosted product operations, private roadmap details, and commercial features can stay controlled.
+## Boundaries Help Public And Private Strategy
 
-That makes the public story stronger. It shows serious engineering without requiring every product decision to be public.
+Package boundaries also help with open-source strategy.
 
-## The Risk
+A project can keep reusable core packages public while keeping hosted-product features private. That allows public discussion of the engineering work without exposing commercial roadmap details, credentials, private datasets, or sensitive research plans.
 
-Boundaries can become over-engineering if they are invented too early.
+For example:
 
-The rule is not "make a package for everything." The rule is:
+- a graph package can be public;
+- a CLI command using it can be public;
+- the hosted collaboration workflow can remain private until mature;
+- demo artifacts can show what the public core does.
 
-> Add a package boundary where reuse, testing, or public clarity justifies it.
+That is a cleaner boundary than making everything public or hiding everything.
 
-For Nexus Scholar, that condition is already true for core workflow logic, graph foundations, graph algorithms, and reference management.
+## The Test For A Useful Package
 
-The next product features should build on that foundation rather than bypass it.
+Before extracting a package, ask a practical question: would this logic be useful from more than one surface?
+
+If the answer is yes, a package may be justified.
+
+Good candidates include operations that need to run from CLI, web, scheduled jobs, and tests. Weak candidates are abstractions created only because the code "looks messy." Packaging should reduce real coupling, not create ceremony.
+
+## Architecture Is Part Of The Public Signal
+
+For technical readers, package boundaries communicate seriousness. They show that the project is not only a demo. It has reusable parts, workflow surfaces, and decisions that can be inspected independently.
+
+This is especially important in research software, where trust depends on more than a pleasant interface. Readers need to know whether the workflow is reproducible, whether artifacts can be generated outside the UI, and whether the core logic can survive product changes.
+
+Package boundaries are not a substitute for useful features. They are what keep useful features from collapsing into a single fragile application.

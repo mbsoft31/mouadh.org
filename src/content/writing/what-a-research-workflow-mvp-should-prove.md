@@ -1,6 +1,6 @@
 ---
 title: What A Research Workflow MVP Should Prove
-description: "A practical checklist for proving a research workflow product without overclaiming adoption or scientific impact."
+description: "A practical checklist for judging whether an early research workflow product has real substance or only a polished surface."
 pubDate: 2026-06-01
 tags:
   - MVP
@@ -10,79 +10,104 @@ evidence:
   - nexus-cli-demo-2026-06-01
 ---
 
-A research workflow MVP should not try to prove everything.
+An MVP for research software should prove a workflow, not a theme.
 
-It should prove the critical workflow path with enough evidence that another person can inspect it.
+It is easy to build a product shell that looks convincing: a dashboard, a few cards, an upload button, a results table, and some status badges. That may be enough for a pitch, but it does not prove the system can support real research work.
 
-For Nexus Scholar, that means a small demo is more valuable than a broad claim about a finished platform.
+A serious MVP should answer a harder question: can the tool take a researcher through a meaningful workflow and leave enough evidence to trust what happened?
 
-## Prove The Workflow Path
+## Prove One Complete Path
 
-A useful MVP should show a complete path:
+The first mistake is trying to demo the whole future product.
 
-1. define a search;
-2. run or import results;
-3. normalize works;
-4. deduplicate or flag duplicates;
-5. screen with criteria;
-6. preserve decisions;
-7. generate a graph or export;
-8. record artifacts.
+For a research workflow tool, one complete path is more valuable than ten unfinished surfaces. A useful path might be:
 
-The workflow can be small. It does not need thousands of papers.
+1. define a query;
+2. run a provider search;
+3. normalize records;
+4. deduplicate candidates;
+5. screen a small set;
+6. export results;
+7. preserve the run evidence.
 
-The important thing is that each step leaves evidence.
+The path can be small. The important part is that it is real.
 
-## Prove The Artifact Shape
+If the MVP cannot complete a narrow path with clear inputs and outputs, the broader roadmap is still speculative.
 
-The output matters.
+## Prove The Data Model
 
-An MVP should show files or records such as:
+Research tools fail when the data model is too shallow.
 
-- run JSON;
-- screening JSON or YAML;
-- graph JSON;
-- export history;
-- full-text manifest;
-- wiki pages;
-- command transcript.
+A paper is not only a title and abstract. It may have provider identifiers, source metadata, duplicate groups, screening decisions, full-text artifacts, citation edges, exports, and manual corrections.
 
-This makes the system easier to evaluate than screenshots alone.
+An MVP should prove that the model can represent the workflow without collapsing important concepts into vague JSON fields.
 
-## Prove Boundaries
+Useful questions:
 
-A serious MVP should show what is not being claimed.
+- Can source records and normalized records both be represented?
+- Can a screening decision reference a criteria version?
+- Can duplicate groups preserve matching evidence?
+- Can exports be tied to corpus state?
+- Can provider runs be inspected later?
 
-For example:
+If the answer is no, the MVP may look finished while hiding structural debt.
 
-- no claim of production adoption;
-- no claim of complete scientific validation;
-- no field deployment claim;
-- no private thesis method disclosure;
-- no credential-dependent demo without careful setup.
+## Prove Failure Handling
 
-Boundaries make the work more credible, not less.
+Research workflows depend on providers, files, background jobs, and user decisions. Failure is normal.
 
-## Prove Repetition
+A useful MVP should show what happens when:
 
-One manual success is not enough.
+- a provider request fails;
+- a PDF cannot be retrieved;
+- a duplicate match is uncertain;
+- an export has missing metadata;
+- a background job is interrupted;
+- a reviewer changes criteria.
 
-The workflow should be repeatable with a small fixture or bounded public input. If it requires private credentials, the demo should explain that and provide a safe substitute.
+The product does not need perfect recovery at the MVP stage. It does need visible failure states. Silent failure destroys trust.
 
-For Nexus Scholar, a good public MVP demo can use:
+## Prove Artifact Output
 
-- command inventory;
-- local status output;
-- example screening format;
-- existing graph artifact;
-- export-history read surface.
+An MVP should leave something behind that can be inspected outside the UI.
 
-That is enough to show the product direction without pretending the whole platform is complete.
+Examples:
 
-## Prove Engineering Taste
+- JSON run summaries;
+- CSV or BibTeX exports;
+- graph files;
+- screening decision records;
+- retrieval manifests;
+- status reports.
 
-An MVP also reveals engineering taste.
+Artifacts make the demo concrete. They also force the implementation to define what the product actually produces.
 
-Does the system expose good boundaries? Does it preserve evidence? Does it avoid hiding important decisions? Does it make public claims that match the code?
+A screenshot is useful for communication. An artifact is useful for verification.
 
-Those questions matter more than a polished landing page.
+## Prove A Boundary Between Core And Surface
+
+The MVP should not trap all logic inside the first interface.
+
+If the product has a CLI, a web app, and future hosted workflows, the core operations should be reusable. Search, deduplication, screening, export, and graph generation should not be rewritten for every surface.
+
+A good early architecture lets the same workflow be called from:
+
+- a command;
+- a web action;
+- a queued job;
+- a test;
+- a public demo fixture.
+
+That boundary gives the product room to grow.
+
+## Prove Honest Limits
+
+A strong MVP says what it does not do yet.
+
+It may support one provider, not five. It may use fixtures instead of live credentials. It may show citation graph artifacts before a polished graph UI. It may preserve full-text retrieval attempts without storing restricted PDFs.
+
+Those limits are acceptable when they are explicit.
+
+The weak version of an MVP hides the limits behind broad language. The strong version names the limits and proves the parts that already work.
+
+For research workflow software, the first product milestone is not "looks complete." It is "a narrow workflow can be run, inspected, and explained."

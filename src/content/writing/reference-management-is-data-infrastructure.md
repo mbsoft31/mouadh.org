@@ -1,81 +1,97 @@
 ---
 title: Reference Management Is Data Infrastructure
-description: "Why BibTeX, RIS, CSL-JSON, EndNote XML, and export history are backend concerns in research workflow software."
+description: "Why citations, bibliographies, identifiers, and exports should be treated as core data infrastructure in research tools."
 pubDate: 2026-06-01
 tags:
   - References
-  - Bibliography
-  - Backend
+  - Research Software
+  - Data
 evidence:
   - nexus-scholar-public-surface-2026-05-31
 ---
 
-Reference management can look like a formatting problem.
+Reference management is often treated as the last step of research: collect papers, write the manuscript, export citations, fix formatting.
 
-It is not only formatting. In research workflow software, references are data infrastructure.
+For research software, that view is too small.
 
-Every review eventually needs to export, cite, inspect, share, or archive the works that survived the workflow. If reference handling is weak, the final output becomes fragile.
+References are not just bibliography entries. They are the identifiers, relationships, provenance, and export records that connect a review workflow to the scholarly record. If reference management is weak, the whole workflow becomes harder to trust.
 
-## Formats Carry Assumptions
+## Identifiers Are The Backbone
 
-BibTeX, RIS, CSL-JSON, and EndNote XML all represent bibliographic data differently.
+A paper can appear under several forms: DOI, PMID, PMCID, arXiv ID, Semantic Scholar ID, OpenAlex ID, publisher URL, or local file path.
 
-They differ in:
+Those identifiers are how tools connect provider records, deduplicate candidates, retrieve metadata, find full text, build citation graphs, and export bibliographies.
 
-- field names;
-- author representation;
-- date structure;
-- identifiers;
-- journal and conference metadata;
-- escaping rules;
-- support for abstracts, keywords, and notes.
+A research system should not treat identifiers as loose strings scattered across records. It should model them deliberately:
 
-A serious reference workflow needs to respect those differences instead of treating export as a string template.
+- identifier type;
+- normalized value;
+- source provider;
+- confidence or verification state;
+- original value when different from normalized value;
+- timestamp or retrieval context when useful.
 
-## Imports Need Provenance
+This is data infrastructure. Without it, every downstream feature becomes less reliable.
 
-When a user imports references, the system should remember where they came from.
+## Bibliography Export Is Not A Formatting Detail
 
-An imported BibTeX file is different from a provider search result. A manually corrected reference is different from a raw provider payload. A citation imported from Zotero may have fields that need normalization before deduplication.
+Exporting BibTeX, RIS, CSV, or another format may look like a convenience feature. In a review workflow, it is part of the evidence chain.
 
-Import provenance helps explain later decisions.
+An export should be tied to:
 
-## Exports Should Be Tied To Corpus State
-
-An export file should answer a basic question:
-
-> Which corpus state produced this bibliography?
-
-If the corpus changes after screening, deduplication, or human adjudication, a previous export may no longer represent the current review.
-
-That is why export history matters. The system should preserve:
-
-- project ID;
+- the corpus version;
+- included and excluded state when relevant;
+- selected fields;
+- generation time;
 - export format;
-- generated filename;
-- timestamp;
-- lock or snapshot state when available;
-- whether the export is final or only a working artifact.
+- tool version or command;
+- warnings about missing metadata.
 
-## Reference Tools Belong Near The Workflow
+That makes the export explainable. If someone later asks why a bibliography contains a record, the team can trace it back to the review workflow.
 
-Reference management should not be bolted on at the end.
+## Citation Quality Depends On Earlier Decisions
 
-It interacts with:
+Bad reference management usually shows up late: broken BibTeX, missing DOIs, inconsistent author names, duplicate records, or wrong years.
 
-- provider imports;
-- deduplication;
-- corpus locks;
-- citation graphs;
-- final bibliography;
-- audit trail.
+But the cause is often earlier:
 
-For Nexus Scholar, this is why `refmanager` is part of the public stack. It supports the research workflow rather than sitting outside it.
+- provider metadata was normalized poorly;
+- duplicate records were merged without preserving source fields;
+- identifiers were overwritten;
+- manual corrections were not tracked;
+- exports pulled from stale data.
 
-## The Engineering Point
+Fixing those problems at the end is painful. A better system treats reference quality as part of the pipeline from the first provider search.
 
-The backend system should treat bibliographic data as structured data.
+## Manual Corrections Need A Trail
 
-That means parsers, serializers, validators, normalized identifiers, and test fixtures. It also means clear limits: an export can be well-formed without claiming the whole review is finished.
+Researchers often correct metadata manually. That is normal. Provider data is imperfect.
 
-Good reference management is quiet infrastructure. It becomes visible only when it fails. The goal is to make it reliable enough that the research workflow can trust it.
+The system should preserve those corrections:
+
+- what field changed;
+- original value;
+- corrected value;
+- who changed it;
+- why it changed if a reason is known;
+- whether the correction applies only locally or should influence future exports.
+
+Manual correction without a trail can create confusion later. Manual correction with a trail becomes part of the research record.
+
+## References Connect To Graphs And Full Text
+
+Reference management also feeds other workflow layers.
+
+Citation graphs depend on identifiers and relationships. Full-text retrieval depends on links and open-access metadata. Screening depends on stable record identity. Exports depend on clean fields.
+
+If references are treated as peripheral, these features become fragile.
+
+If references are treated as infrastructure, the system gains a stable backbone.
+
+## The Practical Design Rule
+
+Do not design citations only for the final manuscript. Design them for the whole workflow.
+
+That means preserving identifiers, source metadata, corrections, duplicate groups, export history, and links to artifacts. The bibliography is only one output of that infrastructure.
+
+For review tools, reference management is not a plugin at the end. It is one of the core data layers that makes the review explainable.

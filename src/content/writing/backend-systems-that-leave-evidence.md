@@ -1,83 +1,93 @@
 ---
 title: Backend Systems That Leave Evidence
-description: "Why serious backend systems should preserve decisions, artifacts, and audit trails instead of only final state."
+description: "Why serious workflow software should preserve decisions, artifacts, and operational history instead of only updating the current state."
 pubDate: 2026-06-01
 tags:
   - Backend
-  - Audit Trail
+  - Audit Trails
   - Laravel
 evidence:
-  - nexus-cli-demo-2026-06-01
+  - nexus-scholar-public-surface-2026-05-31
 ---
 
-Many backend systems store final state.
+Most backend systems are judged by whether they show the right current state. The order is delivered. The invoice is paid. The record is screened. The export is ready.
 
-Serious workflow systems need more than that. They need to preserve decisions, inputs, outputs, and the path that produced the current state.
+That is necessary, but it is not enough.
 
-This is especially true in research software, but it also applies to SaaS, operations tools, and domain-heavy backend work.
+For serious workflow software, the system also has to explain how it reached that state. The current value in the database is only the last page of the story. Users, reviewers, operators, and future developers often need the earlier pages too.
 
-## Final State Is Not Enough
+That is what it means for a backend system to leave evidence.
 
-Suppose a record is marked as included, exported, approved, rejected, or paid.
+## Current State Is Not A History
 
-The final value matters, but it is not the whole story.
+A status column can tell you that something is approved. It cannot tell you who approved it, what criteria were used, what version of the rules applied, which external provider returned the source data, or whether the same item was previously rejected.
 
-A useful system may need to know:
+This matters in many domains:
 
-- who changed it;
+- an order system needs to explain shipment and refund decisions;
+- a loyalty system needs to explain why points were awarded or expired;
+- a document workflow needs to explain which extraction result was accepted;
+- a research workflow needs to explain why a paper was included or excluded;
+- an internal tool needs to explain who changed a sensitive value and why.
+
+If the backend only stores the latest state, every dispute turns into archaeology.
+
+## Evidence Should Be Designed, Not Accidentally Logged
+
+Logs are useful, but they are not the same as product evidence. Application logs are usually written for developers during debugging. They may be rotated, incomplete, too noisy, or stored outside the product's normal data model.
+
+Evidence should be part of the domain.
+
+That can mean:
+
+- immutable decision records;
+- versioned criteria;
+- export manifests;
+- import run records;
+- provider response summaries;
+- event tables for important transitions;
+- generated artifacts that can be downloaded and archived;
+- command outputs that can be reproduced.
+
+The exact implementation depends on the product, but the principle is consistent: if a decision matters, preserve the decision context.
+
+## A Useful Evidence Record Has Shape
+
+Weak audit trails say "updated at 10:14." Stronger trails answer a set of practical questions:
+
+- what changed;
+- who or what changed it;
 - when it changed;
-- why it changed;
-- which rule or workflow produced it;
 - what input was used;
-- what output was generated;
-- whether a later correction happened.
+- which rule or version was applied;
+- what output was produced;
+- where the generated artifact can be found;
+- whether the operation completed, partially failed, or was retried.
 
-That is evidence.
+That shape turns a backend from a black box into an inspectable system.
 
-## Workflow Artifacts Are Product Assets
+In Laravel, this can be built with normal tools: database transactions, events, queued jobs, model observers where appropriate, dedicated audit tables, filesystem storage, and console commands that write structured outputs.
 
-Artifacts are not only logs.
+The hard part is not the framework. The hard part is deciding which events deserve durable records.
 
-They can be product assets:
+## Evidence Helps Product Teams Move Faster
 
-- export files;
-- manifests;
-- run summaries;
-- decision records;
-- graph JSON;
-- audit reports;
-- generated documentation.
+Auditability is sometimes treated as a slow compliance feature. In practice, it often speeds development up.
 
-When designed well, artifacts make the system easier to trust.
+When the system records import runs, debugging provider issues becomes easier. When screening decisions are stored separately from the article record, changing the screening interface becomes safer. When exports have manifests, users can report problems with a concrete artifact instead of a vague description.
 
-## Auditability Is Not Only Compliance
+Evidence gives teams handles. It lets them inspect, compare, replay, and explain.
 
-Auditability is often discussed as compliance.
+That is especially valuable when the system has background jobs. Queues make products more scalable, but they also move behavior out of the request-response path. Without run records and artifacts, background processing becomes difficult to trust.
 
-In research and workflow software, it is also usability. People need to understand what happened. They need to repeat steps. They need to explain decisions to collaborators, supervisors, clients, or reviewers.
+## Evidence Is Also A Public Signal
 
-The backend should help with that.
+For public technical work, evidence matters because it separates real systems from claims.
 
-## Laravel Makes This Practical
+A project page can say "supports review workflows." A stronger page can link to command output, export files, graph artifacts, screenshots, and a description of what was verified.
 
-Laravel gives practical tools for evidence-producing systems:
+That is not marketing polish. It is engineering communication.
 
-- jobs;
-- queues;
-- events;
-- commands;
-- storage;
-- validation;
-- database migrations;
-- testing;
-- policies.
+When a reader sees that a system leaves evidence, they can infer something about the backend discipline behind it. The team is not only chasing screens. It is thinking about reproducibility, support, debugging, and long-term trust.
 
-The engineering task is to use those tools deliberately rather than letting workflow evidence disappear into application side effects.
-
-## The Nexus Scholar Example
-
-Nexus Scholar is built around this principle.
-
-Search runs, screening decisions, graph artifacts, export history, and full-text manifests should all be inspectable. The system should not only say "here is the final corpus." It should help explain how that corpus came to exist.
-
-That is the backend style I want to keep practicing.
+The best workflow systems do not merely change data. They leave enough evidence for a serious reader to understand why the data changed.

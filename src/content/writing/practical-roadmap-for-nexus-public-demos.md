@@ -1,92 +1,97 @@
 ---
 title: A Practical Roadmap For Nexus Scholar Public Demos
-description: "A public-demo roadmap focused on small reproducible artifacts instead of broad claims about product completeness."
+description: "What a useful public demo sequence for Nexus Scholar should prove before a hosted product is pushed into the foreground."
 pubDate: 2026-06-01
 tags:
   - Nexus Scholar
-  - Demo
-  - Roadmap
+  - Product Demos
+  - Research Software
 evidence:
   - nexus-cli-demo-2026-06-01
 ---
 
-Nexus Scholar needs public demos that are small enough to trust.
+A public demo should not try to prove everything.
 
-The goal should not be a dramatic product video first. The goal should be a sequence of evidence-backed demos that show how the workflow works.
+For research workflow software, the best demos are narrow. They show one real capability, name the boundary, and leave an artifact that can be inspected later. That is stronger than a large polished walkthrough where the viewer cannot tell what is real, what is seeded, and what is still planned.
 
-## Demo 1: Command Surface
+Nexus Scholar should be demoed in layers.
 
-The first demo is already partly covered by the public evidence packet.
+## Demo One: Command Inventory And Local Status
 
-Show:
+The first demo should show that the system has a real command surface.
 
-- `php artisan list nexus`;
-- `nexus:status`;
-- `nexus:screen-adjudicate --example`;
-- export-history read surface;
-- graph artifact presence.
+This is not flashy, but it is useful. A command inventory tells technical readers which workflows exist as named operations: search, screening, corpus locks, exports, graph generation, full-text artifacts, status reports, and run statistics.
 
-This proves that the CLI has a real workflow surface without requiring credentials.
+A local status command can show:
 
-## Demo 2: Search Fixture
+- current project context;
+- available review data;
+- missing baseline state;
+- recent runs;
+- export availability;
+- health checks.
 
-The next demo should use a small public fixture.
+This establishes that the tool is not only a concept page. It has an operational surface.
 
-It should show:
+## Demo Two: Safe Search Run With Bounded Data
 
-- query definition;
-- normalized works;
-- provider provenance;
-- run JSON output;
-- stats summary.
+The second demo should show a search workflow without exposing credentials or sensitive research strategy.
 
-The input should be bounded enough that the output can be inspected manually.
+Use a safe query, a small provider set, or a recorded fixture. The goal is not to produce an impressive corpus. The goal is to show how the system handles the search lifecycle:
 
-## Demo 3: Deduplication Evidence
+- input query;
+- provider adapter;
+- raw response boundary;
+- normalized records;
+- run metadata;
+- output artifact;
+- known limits.
 
-A useful demo would show two or three duplicate candidates and explain why they are merged, separated, or flagged.
+If the demo cannot explain those steps, it is too early to make broad claims about provider support.
 
-The output should include matching reasons. That is more valuable than simply reporting "duplicates removed."
+## Demo Three: Deduplication Evidence
 
-## Demo 4: Screening Run
+Deduplication is one of the best ways to show the system's seriousness.
 
-The screening demo should show:
+A good demo can show a small set of duplicate and near-duplicate records, then walk through:
 
-- criteria file;
-- stage;
-- decisions;
-- reasons;
-- evidence snippets;
-- result summary.
+- identifiers used for matching;
+- normalized title comparison;
+- source providers;
+- confidence levels;
+- canonical record selection;
+- manual override path.
 
-If any model-assisted path is used, it should be clearly labeled and bounded.
+The point is not to pretend deduplication is solved perfectly. The point is to show that the system treats it as an auditable decision rather than an invisible cleanup step.
 
-## Demo 5: Citation Graph Artifact
+## Demo Four: Screening Decision Format
 
-The graph demo should show:
+Screening is where review work becomes human and accountable.
 
-- input works;
-- references;
-- generated nodes and edges;
-- one or two metrics;
-- a short explanation of what the graph can and cannot prove.
+A public demo should show the structure of a screening decision:
 
-This keeps graph work grounded.
+- reviewer or actor;
+- criterion version;
+- include, exclude, maybe, or conflict state;
+- reason code;
+- free-text note when appropriate;
+- timestamp;
+- link to the record being screened.
 
-## Demo 6: Export History
+Even a small fixture can demonstrate the workflow. A viewer should be able to see how a decision would be preserved and revisited.
 
-The export demo should show how a bibliography export is tied to a corpus state.
+## Demo Five: Citation Graph Artifact
 
-The key output is not the CSV or BibTeX file alone. It is the history record that explains what the export represents.
+A graph demo should avoid becoming a visual gimmick.
 
-## The Rule
+Show the generated artifact first: nodes, edges, identifiers, source records, graph metadata, and generation date. Then show the visualization if useful.
 
-Every public demo should answer:
+The artifact matters because it can be inspected, regenerated, and tied to a review corpus. The visual is only one way to read it.
 
-- What was run?
-- What input was used?
-- What artifact was produced?
-- What claim does this support?
-- What claim does this not support?
+## Demo Six: Export And Evidence Packet
 
-That is the right demo standard for Nexus Scholar.
+The final public demo in the first sequence should connect the workflow to export.
+
+Show how records become a bibliography file, how export history is stored, and how an evidence packet can point to the generated artifact. This closes the loop from input to review evidence.
+
+The best early Nexus Scholar demos should be boring in the right way: bounded, repeatable, honest, and attached to artifacts. That is how a research workflow tool earns trust before asking anyone to care about a hosted product.

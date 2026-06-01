@@ -1,6 +1,6 @@
 ---
 title: Public Boundaries For Research Software
-description: "How I decide what belongs in public writing, what belongs in open source, and what should stay private until the work is ready."
+description: "A practical way to decide what research software should publish, what should be open source, and what should stay private until it is ready."
 pubDate: 2026-06-01
 tags:
   - Research Software
@@ -10,59 +10,82 @@ evidence:
   - nexus-scholar-public-surface-2026-05-31
 ---
 
-Research software has a public side and a private side.
+If you build research software in public, the hard question is not only "what can be shared?" The harder question is "what can be shared without damaging the work?"
 
-The public side should make the work inspectable. It can include reusable code, documentation, architecture notes, command examples, generated artifacts, and careful evidence packets. The private side protects credentials, client data, unpublished methods, unfinished product decisions, and research plans that should not be exposed before they are ready.
+Open source can make a research tool easier to inspect, reproduce, and trust. Public writing can explain decisions that never fit neatly inside a README. Evidence pages can show that a command runs, an export exists, or a workflow produces a real artifact.
 
-That boundary is not about being vague. It is about being precise.
+But public work can also expose too much. A half-tested research plan can invite weak conclusions. An unpublished method can create priority risk. A raw dataset with unclear license terms can create legal problems. A roadmap can turn into a promise before the product has earned it.
 
-## Public Work Should Be Useful
+The useful boundary is not secrecy. It is editorial discipline.
 
-Open work is useful when another developer or researcher can inspect it and understand what problem it solves.
+## Public Evidence Is Not A Public Diary
 
-For Nexus Scholar, that means public packages, command-line workflows, graph packages, reference-management tooling, and documentation that explains the system. These are useful public surfaces because they show engineering decisions without exposing sensitive research strategy.
+A common mistake is treating public work as a chronological dump: every idea, every experiment, every rough plan, every internal decision. That can feel transparent, but it often makes the project harder to understand.
 
-Public writing should also be tied to something checkable. A claim can point to a repository, command, artifact, commit, screenshot, or evidence note. If a claim cannot be checked, it should be softened or left out.
+Readers do not need every note. They need the parts that help them evaluate the work:
 
-## Private Work Should Stay Controlled
+- what problem the system is trying to solve;
+- what workflow it supports;
+- what code or artifact can be inspected;
+- what claim is already backed by evidence;
+- what remains private, unfinished, or unproven.
 
-Some material should not be public by default:
+That distinction matters. A public repository should help a serious reader answer, "Is there engineering substance here?" It should not force them to sort through private thinking, stale branches, and unreviewed claims.
 
-- unpublished thesis methods;
-- exact future experiments;
-- private roadmap details;
-- credentials and tokens;
-- client data;
-- internal product operations;
-- unclear-license raw datasets;
-- sensitive notes from supervisors or collaborators.
+## A Better Sharing Model
 
-This is not weakness. It is normal engineering and research discipline.
+For research workflow software, a useful public surface usually includes four layers.
 
-## The Problem With Over-Sharing
+First, publish the stable core. That can be a package, command-line workflow, documentation set, data model, or export format. The core is worth sharing when it has a clear boundary and can be understood without access to private credentials or unpublished research plans.
 
-Over-sharing creates two risks.
+Second, publish evidence. A short evidence page can show command output, generated files, screenshots, build logs, or a reproducible demo. This is more valuable than vague claims like "supports systematic reviews" or "uses citation graphs."
 
-The first risk is research risk: a premature idea can be copied, misunderstood, or cited before it has evidence behind it.
+Third, publish design reasoning. Explain why provider adapters are separated, why deduplication records should be auditable, why screening criteria need versions, or why a CLI belongs beside a web app. These arguments help other developers understand the shape of the system.
 
-The second risk is product risk: a half-formed roadmap can make a serious system look unfinished in the wrong way. It is better to publish the reusable core, the boundary, the workflow, and the evidence than to expose every planning document.
+Fourth, keep sensitive strategy private until it is mature. That includes exact unpublished experiments, supervisor-sensitive thesis details, credentials, private client data, and raw datasets whose redistribution terms are unclear.
 
-## The Problem With Under-Sharing
+## What Should Stay Private
 
-Under-sharing also has a cost.
+The private side is not a sign that the work is weak. In serious software and research, some material should be controlled by default.
 
-If all work remains private, there is no public proof of depth. People cannot see the architecture, the command surface, the documentation discipline, or the repeated theme across projects.
+Keep these out of public writing unless there is a deliberate reason:
 
-The right answer is not silence. The right answer is curated public evidence.
+- unpublished thesis methods and exact experimental plans;
+- private roadmaps and commercial packaging decisions;
+- credentials, tokens, API keys, and provider configuration;
+- client data, collaborator notes, and internal operational details;
+- raw datasets with unclear license or consent boundaries;
+- claims that are not yet supported by a reproducible artifact.
 
-## My Working Rule
+The rule is simple: if publishing something creates research priority risk, legal risk, security risk, or false certainty, it does not belong in the public layer yet.
 
-I use this rule:
+## What Should Be Public
 
-> Public work should clarify the system without exposing private research or product risk.
+On the other side, hiding everything creates its own problem. If all serious work stays private, nobody can inspect the depth of the system. A profile becomes a set of claims with no trail.
 
-That means Nexus Scholar can be public as a Laravel/PHP research workflow ecosystem. The CLI command surface can be public. The package boundaries can be public. The idea that systematic reviews need audit trails can be public.
+Useful public material includes:
 
-But exact unpublished PhD methods, private roadmap work, and sensitive research planning should stay controlled.
+- clean package boundaries;
+- command inventories;
+- architecture notes;
+- demo runs with fake or safe data;
+- export examples;
+- evidence packets;
+- careful writeups of tradeoffs;
+- README files that explain status honestly.
 
-This boundary lets the public identity grow without turning the website into a dump of everything.
+That is enough to show competence without exposing every unpublished idea.
+
+## The Practical Test
+
+Before publishing a research-software artifact, ask three questions.
+
+Can a reader learn something concrete from this? If the answer is no, it is probably noise.
+
+Can the claim be checked? If there is no repository, command, screenshot, build log, export, or clear limitation, soften the wording.
+
+Does this expose something that should remain controlled? If yes, publish the boundary and the reasoning instead of the sensitive detail.
+
+That test keeps public work useful. It also prevents a site from becoming either a marketing page or an unfiltered archive.
+
+The strongest public research software does not reveal everything. It reveals enough of the system for a serious reader to trust how the work is being built.

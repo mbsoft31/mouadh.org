@@ -4,96 +4,139 @@ description: "A technical explanation of the systematic review workflow problems
 pubDate: 2026-06-01
 tags:
   - Nexus Scholar
-  - Systematic Review
+  - Systematic Reviews
   - Research Software
-  - Laravel
 evidence:
+  - nexus-scholar-public-surface-2026-05-31
   - nexus-cli-demo-2026-06-01
 ---
 
-Nexus Scholar is not mainly an AI wrapper around academic papers.
+Systematic literature reviews do not fail only because researchers miss a useful paper. They also fail because the workflow becomes difficult to explain.
 
-The real problem is more basic and more difficult: systematic review work creates a chain of evidence, and most of that chain is fragile if it lives in ad hoc spreadsheets, browser tabs, one-off scripts, and undocumented prompts.
+Where did this record come from? Why was that duplicate removed? Which version of the screening criteria was used? Who excluded this study? Which provider returned that DOI? Which export produced the bibliography attached to the report?
 
-The useful software problem is to make the workflow inspectable.
+Those questions are not administrative details. They are part of the research record.
 
-## Search Is A Provenance Problem
+Nexus Scholar is best understood as an attempt to build workflow infrastructure for those questions.
 
-A search result is not only a title and abstract. It depends on:
+## The Problem Is Not Search Alone
 
-- which provider was queried;
-- the exact query text;
-- search filters and date ranges;
-- provider-specific identifiers;
-- raw provider payloads when they are needed for audit;
-- normalized fields that can be compared across sources.
+Many tools start from the search box. Search is important, but it is only the first step.
 
-If two providers return the same work with different metadata, the system needs to preserve enough provenance to explain why the records were merged, separated, or flagged for review.
+A review workflow has several connected stages:
 
-This is why provider boundaries matter. OpenAlex, Semantic Scholar, Crossref, local imports, and future sources should not leak their quirks into every part of the app.
+- query design;
+- provider search;
+- record normalization;
+- deduplication;
+- screening;
+- conflict handling;
+- full-text retrieval;
+- citation graph exploration;
+- export;
+- audit and reporting.
 
-## Deduplication Should Leave Evidence
+If the tool only improves search, the rest of the workflow still depends on spreadsheets, ad hoc notes, manual exports, and memory.
 
-Deduplication is easy to hand-wave and hard to trust.
+The bigger problem is continuity. A review needs a trail from query to final evidence set.
 
-In review workflows, merging two records is a research decision. It affects counts, screening load, citation exports, and the final corpus. The system should preserve matching evidence: DOI matches, title similarity, provider IDs, years, authors, and conflict flags.
+## Provider Boundaries Matter
 
-The goal is not only to remove duplicates. The goal is to make the duplicate decision reviewable.
+Search providers do not return the same kind of data. Crossref, PubMed, OpenAlex, Semantic Scholar, arXiv, and other sources each have different strengths, identifiers, query syntax, metadata quality, and access rules.
 
-## Screening Is A Workflow, Not A Boolean
+A serious review tool should not flatten those differences too early.
 
-Screening needs more than `include` or `exclude`.
+It should preserve:
 
-A useful screening system should preserve:
+- provider used;
+- query submitted;
+- retrieval time;
+- raw or source-specific metadata where appropriate;
+- normalized internal record;
+- warnings about missing or weak fields.
 
-- criteria versions;
-- stage names such as title/abstract or full-text;
-- reviewer or actor identity;
-- decision reasons;
-- evidence snippets;
-- confidence when a model or rule system is involved;
-- comparison between runs.
+That separation helps researchers understand the source of each record. It also helps developers debug search behavior without guessing which provider shaped the data.
 
-That structure makes it possible to compare deterministic screening, model-assisted screening, human adjudication, and later corrections without pretending they are the same thing.
+## Deduplication Needs Evidence
 
-## Citation Graphs Are Not Decoration
+Deduplication is often treated as a cleanup step. In a review workflow, it changes the corpus.
 
-Citation graphs help answer questions that a flat list cannot answer:
+If two records are merged, the system should preserve why:
 
-- Which works anchor a corpus?
-- Which papers bridge clusters?
-- Which results are connected by shared references?
-- Which works are isolated from the rest of the evidence base?
+- DOI match;
+- title similarity;
+- author overlap;
+- provider IDs;
+- manual reviewer confirmation;
+- confidence level or rule name.
 
-That is why Nexus Scholar has graph packages and graph commands in the public stack. The point is not to draw a pretty network image first. The point is to make graph artifacts part of the review workflow.
+This matters because duplicate handling affects record counts and screening work. A reviewer should be able to inspect the duplicate group rather than trusting that the tool "cleaned" the data correctly.
 
-## Full Text Needs Legal And Artifact Boundaries
+## Screening Should Be Auditable
 
-Full-text retrieval should not mean scraping anything available on the web.
+Screening is where the review becomes a decision process.
 
-The workflow needs to distinguish legal open-access artifacts, failed fetch attempts, source URLs, stored manifests, and later inspection. A failed fetch can still be useful evidence if it records what was attempted and why it failed.
+Useful screening records need more than a label. They should preserve:
 
-## Exports Should Be Snapshot-Aware
+- reviewer;
+- include, exclude, maybe, or conflict state;
+- reason code;
+- criteria version;
+- timestamp;
+- notes when needed;
+- link to the exact record screened.
 
-Bibliographic exports are not just output files.
+This is the difference between a checkbox interface and a review workflow. The checkbox updates state. The workflow preserves a decision.
 
-A citable export should be tied to the corpus state that produced it. If the corpus changes after screening or adjudication, that should be visible. Export history, lock state, and snapshot metadata matter because they let another person understand which evidence set an export represents.
+## Citation Graphs Should Support Review Work
 
-## Why The CLI Matters
+Citation graphs can help reviewers see relationships between papers, but only if the graph is tied to the corpus and its provenance.
 
-The CLI is not a side feature. It is the easiest way to make the workflow reproducible before a hosted product is mature.
+A graph artifact should make clear:
 
-A researcher or developer should be able to run commands, inspect generated JSON, review artifacts, and repeat a workflow without depending on a private dashboard. The hosted app can make the workflow easier to use later, but the command-line layer keeps the system honest.
+- which records were used;
+- what identifiers connected them;
+- what edge types exist;
+- when the graph was generated;
+- whether it came from provider metadata, references, cited-by data, or another source.
 
-## What Comes Next Publicly
+The goal is not a pretty network image. The goal is to help reviewers inspect coverage, find related work, and document snowballing decisions.
 
-The next public work should be narrow and checkable:
+## Full Text Needs Careful Boundaries
 
-- clearer command examples;
-- small reproducible workflow demos;
-- evidence packets tied to commits and generated artifacts;
-- better documentation around provider adapters, screening runs, graph outputs, and exports.
+Full-text retrieval is useful, but it has legal and operational limits.
 
-That is the direction I want for Nexus Scholar: not vague research automation, but auditable research workflow infrastructure.
+The system should distinguish between:
 
-Evidence page: [Nexus CLI public demo evidence](/evidence/nexus-cli-demo-2026-06-01/).
+- metadata-only records;
+- open-access links;
+- user-uploaded files;
+- local artifacts;
+- failed retrieval attempts;
+- restricted files that should not be redistributed.
+
+This boundary protects the workflow. It lets researchers preserve useful retrieval evidence without pretending every PDF can be freely stored or shared.
+
+## Exports Should Be Reproducible
+
+An export is not just a download button. It is a snapshot of the review state.
+
+A useful export should be tied to:
+
+- corpus version;
+- filters used;
+- export format;
+- fields included;
+- generation time;
+- warnings about missing metadata;
+- command or workflow that produced it.
+
+This lets a bibliography, CSV, graph file, or report be traced back to the state that generated it.
+
+## The Product Direction
+
+Nexus Scholar is not trying to replace researcher judgment. It is trying to make the workflow around that judgment more structured.
+
+The useful product is not "AI writes the review." The useful product is infrastructure that helps researchers search, screen, inspect, export, and explain their work.
+
+That is a more demanding goal than a search interface, but it is also more valuable. Literature-review work needs tools that preserve decisions, not tools that make the evidence trail disappear behind automation.

@@ -1,77 +1,92 @@
 ---
 title: Screening Criteria Should Be Versioned
-description: "Why inclusion and exclusion criteria in research workflows should be treated as versioned inputs, not informal text."
+description: "Why inclusion and exclusion criteria in review software should be versioned, auditable, and tied to reviewer decisions."
 pubDate: 2026-06-01
 tags:
   - Screening
-  - Research Workflow
-  - Evidence
+  - Systematic Reviews
+  - Audit Trails
 evidence:
   - nexus-cli-demo-2026-06-01
 ---
 
-Screening is where a literature review starts turning search results into a corpus.
+Screening criteria change more often than review teams like to admit.
 
-That step should not depend on informal memory. Inclusion and exclusion criteria need to be written, versioned, and tied to decisions.
+Early in a review, the team may discover that a keyword is too broad, a study type is ambiguous, or a dataset condition needs clarification. Sometimes the change is small. Sometimes it affects many decisions.
 
-If the criteria change, the review changed.
+If the tool only stores the latest criteria, older screening decisions become hard to interpret.
 
-## Criteria Are Inputs
+That is why screening criteria should be versioned.
 
-In software terms, criteria are not just documentation. They are inputs to a decision process.
+## A Decision Needs Its Rule Context
 
-They influence:
+A reviewer decision is not just "include" or "exclude." It is a decision made under a particular rule set.
 
-- which works are included;
-- which works are excluded;
-- which works need human review;
-- how model-assisted decisions are interpreted;
-- how later audit questions are answered.
+For example:
 
-If criteria are vague or untracked, the decisions become hard to defend.
+- criterion version 1 may exclude papers without explicit dataset names;
+- criterion version 2 may allow papers where the dataset is described but not named;
+- criterion version 3 may split a broad exclusion reason into two clearer categories.
 
-## A Decision Needs Context
+If decisions are stored without the criterion version, the review history becomes ambiguous. A paper excluded last week may look inconsistent with the rules today, even though the reviewer followed the rule that existed at the time.
 
-A screening decision should preserve more than `include` or `exclude`.
+## Versioning Does Not Have To Be Heavy
 
-It should include:
+Criteria versioning can be simple.
 
-- criteria version or hash;
-- screening stage;
-- actor identity;
-- reason;
-- evidence snippets;
-- confidence if applicable;
-- source decision IDs when decisions are derived or adjudicated.
+A useful model might include:
 
-This matters because screening often happens in layers. A rules-based pass might be followed by model-assisted screening. A human reviewer might later adjudicate disagreements.
+- version number;
+- date created;
+- author or reviewer group;
+- inclusion criteria;
+- exclusion criteria;
+- reason-code definitions;
+- notes explaining what changed;
+- active or retired status.
 
-Those steps should not overwrite each other.
+Each screening decision should reference the criteria version used.
 
-## Versioning Prevents Confusion
+That is enough to preserve context without turning the workflow into a formal compliance system.
 
-Without versioning, it becomes unclear whether two decisions used the same criteria.
+## Changes Should Trigger Review Questions
 
-A review team might update criteria after reading the first batch of papers. That can be legitimate, but the change should be explicit.
+When criteria change, the tool should help reviewers understand the impact.
 
-The system should be able to say:
+Useful questions include:
 
-- this decision used criteria version A;
-- this later decision used criteria version B;
-- these runs should not be compared as if they used identical inputs.
+- which records were screened under the older version;
+- which exclusion reasons were affected;
+- whether any decisions need re-checking;
+- whether conflicts increased after the change;
+- whether a migration note is needed for reporting.
 
-## Model-Assisted Screening Needs Even More Discipline
+The tool does not need to automatically rescreen everything. It needs to make the effect visible.
 
-If a model is involved, criteria versioning becomes more important.
+## Versioned Criteria Improve Team Collaboration
 
-The model prompt, criteria, run configuration, and stored response policy all affect the result. Treating that as a single label hides too much.
+In multi-reviewer work, criteria drift can create disagreement. Two reviewers may think they are applying the same rule while interpreting it differently.
 
-A useful system should preserve the decision trail without exposing private prompts or sensitive research planning publicly.
+Versioned criteria help by giving the team a shared reference. When conflicts appear, the discussion can refer to a concrete rule version rather than memory.
 
-## The Public Demo Boundary
+This is especially useful when onboarding a new reviewer. Instead of explaining screening logic informally, the team can point to the current version and the change history.
 
-The public Nexus CLI evidence page includes a human-adjudication example. That example is useful because it shows the shape of a decision record without claiming a production workflow is finished.
+## Reporting Becomes Stronger
 
-That is the right public level for now: show the structure, show the boundary, avoid overstating maturity.
+Review reports often need to explain inclusion and exclusion decisions. If the criteria changed during screening, that should be documented.
 
-The long-term goal is simple: screening decisions should be explainable after the fact.
+A tool with versioned criteria can support better reporting:
+
+- when each version was active;
+- why the criteria changed;
+- how many records were screened under each version;
+- which records were re-reviewed;
+- whether the final included set reflects the latest criteria.
+
+That gives the review process a defensible trail.
+
+## The Core Rule
+
+Do not store screening decisions as isolated labels. Store them as decisions made by a reviewer, on a record, under a criteria version, with a reason.
+
+That structure turns screening from a set of checkboxes into an auditable review workflow.

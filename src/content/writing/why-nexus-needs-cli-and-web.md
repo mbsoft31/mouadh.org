@@ -1,73 +1,94 @@
 ---
 title: Why Nexus Scholar Needs Both CLI And Web
-description: "The CLI and hosted web app solve different problems in the same research workflow ecosystem."
+description: "Why a serious research workflow tool benefits from a command-line surface, a web surface, and shared package-level core logic."
 pubDate: 2026-06-01
 tags:
   - Nexus Scholar
   - CLI
-  - Laravel
+  - Web Apps
 evidence:
   - nexus-cli-demo-2026-06-01
 ---
 
-Nexus Scholar needs both a CLI and a web app.
+Research workflow tools usually need more than one interface.
 
-The reason is not indecision. The two surfaces solve different problems.
+A web app is good for collaboration, visibility, and guided work. A CLI is good for reproducible commands, local artifacts, scripted runs, and developer evidence. Packages are good for keeping the domain logic reusable across both.
 
-The CLI helps prove the workflow. The web app helps people use it together.
+For Nexus Scholar, the right architecture is not CLI or web. It is CLI plus web over a shared core.
 
-## The CLI Is For Reproducibility
+## The CLI Is The Proof Surface
 
-The CLI is good at:
+A command-line interface is not always friendly for non-technical users, but it is excellent for proving that a workflow exists.
 
-- explicit commands;
-- local files;
-- generated artifacts;
+A CLI can show:
+
+- command names;
+- required inputs;
+- generated files;
+- status output;
+- exit behavior;
 - repeatable runs;
-- developer inspection;
-- bounded public demos;
-- workflow automation.
+- local evidence.
 
-For early research software, this is valuable because it forces the underlying operations to be real.
+When a command such as `nexus:screen-adjudicate` or `nexus:export-bibliography` exists, it forces the system to define the operation outside the browser.
 
-If a search run, screening pass, graph build, or export cannot be expressed as a command, the workflow may be too hidden.
+That matters because research workflows should be inspectable. If a workflow can only be understood by clicking through a UI, it is harder to test, document, and reproduce.
 
-## The Web App Is For Collaboration
+## The Web App Is The Collaboration Surface
 
-The web app is good at:
+A CLI is not enough for teams.
 
-- team workspaces;
-- guided review flows;
-- dashboards;
-- reviewer assignment;
-- comparison views;
-- artifact browsing;
-- product onboarding.
+Reviewers need queues, filters, dashboards, status views, conflict resolution, permissions, and guided forms. They need to see what remains unscreened, which records have conflicts, and where the workflow is stuck.
 
-Researchers do not want every task to be a command. A hosted UI can make the workflow accessible.
+That is the job of the web app.
 
-## The Shared Core Matters
+The web surface should make the workflow easier to use without hiding the evidence. A screening page should still produce decision records. A graph view should still point to a graph artifact. An export button should still create export history.
 
-The risk is duplicating logic.
+The UI improves usability. It should not replace the audit trail.
 
-If the CLI and web app each implement their own workflow rules, they will drift. The better architecture is a shared core package with CLI and web surfaces around it.
+## Shared Core Prevents Drift
 
-That is why package boundaries matter.
+If the CLI and web app implement their own versions of the workflow, they will eventually disagree.
 
-The core should understand the workflow. The CLI should expose it as commands. The web app should expose it as product flows.
+The CLI will normalize records one way. The web app will apply screening rules another way. The export button will include fields the command does not. Tests will pass in one surface and fail in another.
 
-## Public And Private Roles
+Shared package-level core logic reduces that risk.
 
-The CLI is easier to demonstrate publicly because it can show command output and artifacts without exposing hosted product operations.
+The CLI, web app, and jobs should call the same domain operations where possible:
 
-The web app can remain public as a product shell, but some operational and commercial details should stay controlled.
+- provider search and normalization;
+- deduplication;
+- screening decision models;
+- corpus lock handling;
+- graph generation;
+- bibliography export.
 
-This supports the open-core boundary: reusable workflow ideas stay public, hosted product operations stay managed.
+That gives the system one source of behavior with multiple entry points.
 
-## The Direction
+## Public Demos Should Start With The CLI
 
-For Nexus Scholar, the next public demos should probably start with CLI workflows. They are easier to reproduce and easier to tie to evidence.
+For a young research tool, the CLI is often the safer public demo path.
 
-The web app can then show how the same workflow becomes easier for teams.
+It can use bounded data, fixtures, local artifacts, and clear command output. It can show technical substance without exposing private hosted-product decisions or sensitive research details.
 
-Both surfaces are necessary if the goal is serious research workflow software.
+The web app can come forward as the collaborative workflow matures.
+
+This sequence is useful:
+
+1. prove the command surface;
+2. prove artifacts and export history;
+3. prove core package boundaries;
+4. add web workflows over the same core;
+5. demo collaboration once the audit trail is stable.
+
+That order keeps the product honest.
+
+## The Architecture Signal
+
+Technical readers notice when a project has multiple coherent surfaces.
+
+A CLI says the workflow can be run. A web app says the workflow can be used by teams. Packages say the workflow is not trapped in either interface.
+
+That combination is stronger than a single polished demo because it shows the system has room to grow.
+
+Nexus Scholar needs both CLI and web because research work needs both reproducibility and usability. The shared core is what prevents those two needs from becoming separate products.

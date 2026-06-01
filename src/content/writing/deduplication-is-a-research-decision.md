@@ -1,87 +1,101 @@
 ---
 title: Deduplication Is A Research Decision
-description: "Why duplicate removal in systematic reviews should preserve evidence instead of silently merging records."
+description: "Why duplicate handling in literature-review tooling should be auditable instead of treated as a silent cleanup step."
 pubDate: 2026-06-01
 tags:
-  - Systematic Review
   - Deduplication
-  - Evidence
+  - Systematic Reviews
+  - Research Software
 evidence:
   - nexus-cli-demo-2026-06-01
 ---
 
-Deduplication sounds like a data-cleaning step.
+Deduplication sounds like housekeeping. In literature-review tooling, it is closer to a research decision.
 
-In systematic review software, it is more than that. Deduplication changes the corpus. It changes counts. It changes what gets screened. It affects exports. It can affect the final interpretation of the review process.
+When records come from several providers, the same paper can appear with different titles, missing DOI values, inconsistent author lists, translated metadata, venue abbreviations, or slightly different publication years. A tool has to decide whether those records describe one study or several.
 
-That makes deduplication a research decision.
+That decision affects the corpus. It can change screening counts, PRISMA-style reporting, export files, and downstream analysis.
 
-## Silent Merges Are Dangerous
+Treating deduplication as invisible cleanup is a mistake.
 
-If two records share the same DOI, merging them is usually reasonable. But not every case is that clean.
+## Duplicate Records Are Not Always Obvious
 
-Records can be similar because:
+Some duplicates are easy. Two records have the same DOI, same title, same year, and same authors. Those can be merged with high confidence.
 
-- titles are nearly identical;
-- authors overlap;
-- publication year matches;
-- venue names differ slightly;
-- provider IDs disagree;
-- one record is a preprint and another is a published version;
-- one provider has incomplete metadata.
+Other cases are harder:
 
-If the system silently merges records, the reviewer loses the ability to inspect the decision.
+- one provider includes a DOI and another does not;
+- the title differs because of punctuation or spelling normalization;
+- author initials are formatted differently;
+- conference and journal versions both exist;
+- preprint and final publication are related but not identical;
+- one record is a dataset paper and another is a method paper with similar wording.
 
-## The Evidence Should Survive
+If a tool merges too aggressively, it can remove a real study. If it merges too weakly, reviewers waste time screening the same work repeatedly.
 
-A useful deduplication workflow should preserve why a merge happened.
+There is no perfect rule. That is why the decision trail matters.
 
-That can include:
+## Store The Reason, Not Only The Result
 
-- DOI match;
-- exact title match;
+A deduplication system should not only keep the winning record. It should preserve why the records were grouped.
+
+Useful evidence includes:
+
+- identifiers that matched, such as DOI, PMID, arXiv ID, or Semantic Scholar ID;
 - normalized title similarity;
 - author overlap;
-- year match;
-- provider IDs;
-- conflict flags;
-- raw provider references.
+- year and venue comparison;
+- provider sources;
+- confidence score or rule name;
+- manual override decisions;
+- fields retained from each source record.
 
-The final corpus can still have one representative record, but the merge evidence should remain available.
+This makes the merge inspectable. A reviewer can understand whether the system relied on a strong identifier match or a weaker fuzzy-title rule.
 
-## Deduplication Is Connected To Screening
+## The Canonical Record Is A Product Choice
 
-Screening depends on corpus membership.
+After detecting duplicates, the system still needs to decide which metadata becomes canonical.
 
-If duplicate handling changes, screening results can change too. A reviewer might screen one record and not another. A model-assisted screening run might classify only the representative record. Export counts might shift.
+Should DOI come from Crossref? Should abstracts come from the provider with the longest text? Should author order be preserved from the publisher? Should venue names be normalized? Should all provider IDs be retained?
 
-That means deduplication should happen with enough traceability to explain later decisions.
+These are not neutral details. They shape export quality and reviewer trust.
 
-## The UI Is Not Enough
+A good system should separate three concepts:
 
-A UI can show duplicate groups and merge buttons. That is useful.
+- source records, exactly as providers returned them;
+- duplicate groups, with matching evidence;
+- canonical records, built from a clear field-selection policy.
 
-But the underlying system should still produce artifacts:
+That separation prevents the original provider data from disappearing.
 
-- duplicate group IDs;
-- candidate pairs;
-- matching reasons;
-- selected representative;
-- merge decision timestamp;
-- actor or rule source.
+## Manual Review Still Matters
 
-Those artifacts are what make the workflow auditable.
+Some duplicate groups should be flagged for human review. A tool can suggest likely matches, but it should not pretend every fuzzy match is certain.
 
-## The Nexus Scholar Direction
+Manual review is especially important when:
 
-For Nexus Scholar, deduplication should not be treated as an invisible helper. It belongs in the workflow model.
+- the title similarity is high but authors differ;
+- the same DOI appears with conflicting metadata;
+- a preprint and published version both exist;
+- a study has multiple related outputs;
+- the record sits near inclusion criteria where losing it would matter.
 
-A serious review tool needs to answer:
+When a reviewer confirms or rejects a duplicate group, that decision should be stored as part of the review history.
 
-- What was removed?
-- Why was it removed?
-- Which source found it?
-- Which record survived?
-- Can the decision be inspected later?
+## Deduplication Affects Reporting
 
-That is the standard I want the system to move toward.
+Systematic reviews often report how many records were found, how many duplicates were removed, how many records were screened, and how many studies were included.
+
+If deduplication is not auditable, those counts become hard to defend.
+
+A strong review tool should be able to answer:
+
+- how many records came from each provider;
+- how many duplicate groups were created;
+- which rules created them;
+- how many were manually adjusted;
+- which records were removed from screening and why.
+
+That is the difference between a convenience feature and research infrastructure.
+
+Deduplication is not just cleaning the database. It is shaping the evidence set. It deserves the same care as any other review decision.

@@ -1,81 +1,93 @@
 ---
 title: Citation Graphs Belong In Review Workflows
-description: "Why citation graphs should be treated as review artifacts, not decorative network images."
+description: "Why citation graphs should be treated as workflow evidence in literature reviews, not only as visualizations."
 pubDate: 2026-06-01
 tags:
   - Citation Graphs
-  - Graph Algorithms
-  - Nexus Scholar
+  - Systematic Reviews
+  - Research Software
 evidence:
   - nexus-cli-demo-2026-06-01
 ---
 
-Citation graphs are often presented as visuals.
+Citation graphs are often presented as attractive visuals: clusters, nodes, edges, colors, and labels. They can look impressive, but the visual is not the point.
 
-Visuals can help, but the deeper value is not the image. The deeper value is the structure: works, references, citing relationships, clusters, paths, centrality, and disconnected components.
+In a serious review workflow, a citation graph should help answer practical questions.
 
-In systematic review workflows, citation graphs should be artifacts.
+Which papers are central? Which clusters are disconnected? Which included studies cite each other? Which older work keeps reappearing? Which candidate papers came through search, and which came through citation chasing? Which exclusion decisions might need another look because the paper sits close to the included set?
 
-## A Flat List Hides Structure
+Those questions make citation graphs part of the workflow, not decoration.
 
-A search result list can show titles, authors, years, and abstracts.
+## Search Results Are Usually Flat
 
-It cannot easily show:
+Most search workflows begin with flat records: title, abstract, authors, year, venue, DOI, and provider metadata. That is enough for screening, but it hides relationships between papers.
 
-- which works cite each other;
-- which papers anchor a cluster;
-- which works bridge topics;
-- which papers are isolated;
-- which search results share references;
-- which evidence areas are under-connected.
+Two papers may use the same dataset. One may extend the other. A later benchmark may cite a weak earlier method. A survey may connect terms that do not appear in the same search query.
 
-These are graph questions.
+If the review tool treats every record as isolated, reviewers lose a layer of evidence that could help them understand the field.
 
-## Graphs Help With Inspection
+Citation graphs add that missing structure.
 
-Citation graphs are not a replacement for screening. They are a way to inspect a corpus.
+## Graphs Help With Coverage
 
-They can help a reviewer notice:
+Coverage is one of the hardest problems in literature review work. A query can look reasonable and still miss important studies because the vocabulary is different, the title is vague, or the paper is indexed poorly.
 
-- a major work missing from the current search;
-- a cluster that may need different keywords;
-- a set of results that are connected by shared methods;
-- outliers that should be checked carefully;
-- citation patterns that explain why certain papers appear central.
+A citation graph can expose coverage gaps:
 
-The graph does not make the research decision. It helps expose structure behind the decision.
+- important papers cited by many included records but absent from the candidate set;
+- isolated clusters that suggest the query is mixing unrelated topics;
+- review papers that connect terminology across subfields;
+- papers that repeatedly appear as references but were excluded too quickly;
+- new candidate trails for backward and forward snowballing.
 
-## Algorithms Need Boundaries
+The graph does not make the decision automatically. It gives reviewers a structured way to ask better questions.
 
-Graph algorithms are useful only if their meaning is clear.
+## The Graph Needs Provenance
 
-PageRank, centrality, shortest paths, connected components, co-citation, and bibliographic coupling all answer different questions. A tool should not throw metrics at users without explaining what those metrics mean in the workflow.
+A graph without provenance is dangerous. It can look authoritative while hiding where the data came from.
 
-For Nexus Scholar, this is why generic graph packages and research-domain graph builders should stay separated.
+Every graph artifact should preserve enough context to be evaluated:
 
-The generic package can handle graph primitives and algorithms. The research workflow layer should decide what a citation, reference, co-citation relationship, or bibliographic coupling edge means.
+- source records used to build the graph;
+- provider or metadata source;
+- date of retrieval;
+- identifier matching rules;
+- edge type, such as cites, cited-by, related, or shared reference;
+- filters applied before graph generation;
+- version of the review corpus.
 
-## The Artifact Matters
+Without that information, the graph becomes a picture that cannot be audited.
 
-A graph command should write an artifact, not only print a summary.
+This is where research software needs backend discipline. The graph should be an artifact with metadata, not just a canvas on a page.
 
-That artifact can include:
+## Graphs Should Feed Decisions
 
-- project ID;
-- graph type;
-- input work count;
-- relationship count;
-- nodes;
-- edges;
-- metrics;
-- generated time.
+The best use of a citation graph is not "look at this network." It is "what decision does this network help with?"
 
-This makes the graph inspectable later.
+Examples:
 
-## The Practical Direction
+- flag included papers that are disconnected from the rest of the corpus;
+- suggest candidate papers for manual review;
+- compare the graph before and after deduplication;
+- show which papers support a specific evidence cluster;
+- identify citation paths from a seed paper to newer work;
+- explain why a paper was considered during snowballing.
 
-The public Nexus CLI evidence already shows a citation graph artifact path.
+These features make the graph operational. It becomes part of the review trail.
 
-The next step is to publish small demos that make the graph easier to understand: one input run, one generated graph, one explanation of what the graph can and cannot prove.
+## Keep Automation Humble
 
-That is a better public artifact than a vague claim about AI-powered literature review.
+A graph can recommend papers, but it should not silently decide inclusion. Citation relationships are signals, not verdicts.
+
+Highly cited papers can still be irrelevant. New papers can be important before they accumulate citations. Some fields have uneven indexing. Some useful papers are poorly connected because of language, venue, or data-source gaps.
+
+The right design is decision support with audit trails:
+
+- show why a paper was suggested;
+- let reviewers accept or reject it;
+- store the decision;
+- preserve the graph version used at the time.
+
+That keeps the human review process visible.
+
+Citation graphs are most valuable when they stop being a final visualization and become a working layer inside the review workflow.

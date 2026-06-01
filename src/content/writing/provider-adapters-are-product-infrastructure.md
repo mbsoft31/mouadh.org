@@ -1,85 +1,105 @@
 ---
 title: Provider Adapters Are Product Infrastructure
-description: "Why scholarly provider integrations should be treated as core infrastructure instead of scattered API calls."
+description: "Why integrations with scholarly providers should be designed as durable infrastructure rather than one-off API calls."
 pubDate: 2026-06-01
 tags:
-  - Providers
+  - Integrations
+  - Research Software
   - Backend
-  - Nexus Scholar
 evidence:
   - nexus-scholar-public-surface-2026-05-31
 ---
 
-Scholarly search software depends on providers.
+Scholarly search integrations are often treated as simple API calls. Send a query, receive JSON, map a few fields, save the records.
 
-OpenAlex, Semantic Scholar, Crossref, local BibTeX, RIS files, and future sources all have different identifiers, metadata fields, pagination behavior, rate limits, and failure modes. If those differences leak everywhere, the system becomes hard to trust.
+That works for a demo. It does not hold up as product infrastructure.
 
-This is why provider adapters are product infrastructure.
+Every provider has its own vocabulary, limits, identifiers, response shape, and failure modes. A serious research tool needs provider adapters that make those differences explicit instead of hiding them in scattered request code.
 
-## Providers Have Different Truths
+## Providers Do Not Agree On The World
 
-The same work can appear differently across providers.
+Different scholarly providers describe papers differently.
 
-One source might have a DOI. Another might have an OpenAlex ID. A third might have better abstract data. Author names can differ. Dates can differ. Venue names can be normalized in one source and messy in another.
+One provider may emphasize DOI and publisher metadata. Another may expose citation counts, abstract fields, open-access flags, external IDs, or inferred relationships. Some include rich author data. Others return partial records. Rate limits, pagination, date filters, and query syntax also vary.
 
-The software should not pretend these differences do not exist.
+If your application pretends every provider is the same, the internal data model becomes confused.
 
-Instead, it should preserve provenance:
+A good adapter should answer:
 
-- provider name;
-- provider work ID;
-- query used;
-- normalized work fields;
-- raw payload when needed;
-- retrieval timestamp;
-- confidence around matching.
+- what query options this provider supports;
+- what identifiers it returns;
+- what fields are reliable;
+- which fields are missing or inferred;
+- how pagination works;
+- how errors and rate limits behave;
+- how raw records map to normalized records.
 
-## Adapters Protect The Domain
+That information is product knowledge, not implementation trivia.
 
-The core domain should not be full of provider-specific details.
+## Raw Responses Should Not Disappear
 
-A review workflow should reason about works, queries, corpora, screening decisions, references, citations, and exports. It should not know the exact response quirks of each provider API.
+Normalization is necessary, but it can also destroy useful context.
 
-Adapters let the domain stay stable while provider clients evolve.
+If the system only stores normalized records, it may lose provider-specific details that matter later. A reviewer may need to know where a DOI came from. A developer may need to debug a missing abstract. A future adapter may need to compare how two providers describe the same paper.
 
-That matters because APIs change. Rate limits change. Search behavior changes. A clean adapter boundary makes those changes manageable.
+A safer design preserves both layers:
 
-## Rate Limits Are Part Of The Architecture
+- raw or minimally transformed provider payloads where appropriate;
+- normalized records for the rest of the application;
+- mapping metadata that explains what happened;
+- provider run history.
 
-Provider integration is not only mapping JSON into objects.
+This lets the product use a clean internal model without pretending the original source did not exist.
 
-It also includes:
+## Failure Modes Are Part Of The Adapter
 
-- rate limiting;
-- retries;
-- backoff;
-- caching;
-- error classification;
-- raw response retention policy;
-- test fixtures;
-- legal and usage constraints.
+Provider adapters should handle failure as deliberately as success.
 
-If rate limiting is easy to bypass, the integration is not mature. If tests depend on live provider behavior by default, the workflow becomes fragile.
+Useful adapter behavior includes:
 
-## The Product Value
+- rate-limit handling;
+- retry strategy;
+- clear error categories;
+- partial-result reporting;
+- timeout behavior;
+- provider-specific validation;
+- logs that do not leak secrets;
+- enough metadata to explain failed runs.
 
-Good provider infrastructure gives the product better answers.
+If these decisions are scattered across controllers, jobs, and commands, the product becomes difficult to operate. If they live near the adapter boundary, the system is easier to reason about.
 
-It helps answer:
+## Adapter Design Affects Research Claims
 
-- Where did this work come from?
-- Which query found it?
-- Which provider fields were trusted?
-- Why was this record merged with another record?
-- Can this search be repeated?
-- What changed between two runs?
+Provider behavior can affect review results. If one adapter silently drops records because a field is missing, the review corpus changes. If another adapter handles pagination incorrectly, the search is incomplete. If query syntax is translated poorly, the tool may retrieve a different set of papers than expected.
 
-These are product questions, not only backend questions.
+That means provider adapters are not only engineering concerns. They affect the evidence base.
 
-## Why This Matters For Nexus Scholar
+A serious research workflow should preserve:
 
-Nexus Scholar is built around systematic review workflows. Search is the first step, but it affects everything downstream: deduplication, screening, graph building, full-text retrieval, and bibliography exports.
+- query submitted;
+- provider used;
+- time of search;
+- pagination and result counts;
+- normalization decisions;
+- warnings or limitations;
+- adapter version when useful.
 
-If provider boundaries are weak, every later step inherits confusion.
+That evidence helps researchers understand what the search actually did.
 
-That is why provider adapters belong close to the foundation of the system.
+## Product Features Depend On Adapter Quality
+
+Many visible product features rely on adapter discipline:
+
+- search history;
+- deduplication;
+- citation graph generation;
+- open-access discovery;
+- export quality;
+- corpus statistics;
+- evidence packets.
+
+If provider adapters are weak, those features inherit the weakness.
+
+That is why integrations should be treated as infrastructure. They deserve tests, documentation, status notes, and clear boundaries.
+
+The visible product may be a search screen, but the trust comes from the adapter layer underneath it.

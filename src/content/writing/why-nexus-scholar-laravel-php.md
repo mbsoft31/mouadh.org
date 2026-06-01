@@ -1,74 +1,96 @@
 ---
-title: Why Nexus Scholar Is A Laravel/PHP Project
-description: "A technical note on treating systematic review tooling as backend domain work: providers, deduplication, screening, citation graphs, references, and audit trails."
+title: Why Nexus Scholar Uses Laravel And PHP
+description: "A practical explanation of why Laravel/PHP fits systematic-review workflow software: commands, queues, policies, exports, packages, and audit trails."
 pubDate: 2026-06-01
 tags:
+  - Nexus Scholar
   - Laravel
   - PHP
-  - Research Software
-  - Nexus Scholar
 evidence:
   - nexus-scholar-public-surface-2026-05-31
 ---
 
-Nexus Scholar is my public research-tooling stack for systematic literature review workflows.
+Laravel and PHP are not the trendy answer for every research-software problem. That does not make them weak choices.
 
-The goal is not to wrap an AI model around papers and call it research automation. The useful work is more structural: search plans, provider boundaries, deduplication, screening decisions, citation graphs, full-text retrieval, bibliographic exports, and enough audit trail that another person can inspect what happened.
+For a systematic-review workflow tool, the important question is not whether the stack sounds fashionable. The important question is whether it supports the actual work: provider integrations, background jobs, command-line workflows, review state, exports, access control, and audit trails.
 
-Laravel/PHP is a practical fit for this kind of work.
+Laravel is a practical fit for that kind of software.
 
-## Systematic Review Software Is Domain-Heavy
+## Systematic Reviews Are Backend Work
 
-Systematic review software is not only a search box. A real workflow needs to model:
+A review tool is not just a search page.
 
-- projects, protocols, and inclusion criteria;
-- provider queries and search provenance;
-- normalized scholarly works across sources such as OpenAlex, Semantic Scholar, Crossref, and local files;
-- corpus membership and deduplication evidence;
-- screening runs and reviewer decisions;
-- full-text fetch attempts and legal source boundaries;
-- citation graph relationships;
-- bibliographic exports and run history.
+Under the surface, it has to manage:
 
-That is backend domain work before it is UI work. Laravel gives me a productive environment for queues, migrations, events, commands, validation, jobs, policies, and HTTP integrations while still allowing package-level boundaries.
+- provider queries;
+- source records;
+- normalized metadata;
+- duplicate groups;
+- screening decisions;
+- reviewer conflicts;
+- full-text retrieval attempts;
+- citation graph artifacts;
+- export history;
+- project state.
 
-## The Package Boundary Matters
+That is backend domain work. It needs a data model, commands, jobs, storage, policies, tests, and clear boundaries.
 
-The core workflow logic belongs in reusable packages, not only in a hosted app.
+Laravel gives those pieces in one mature ecosystem.
 
-In Nexus Scholar, the public structure is:
+## Artisan Commands Are Useful For Research Workflows
 
-- `nexus-scholar/core`: PHP 8.3+ workflow toolkit and package boundary;
-- `nexus-scholar/nexus-cli`: Laravel Artisan workspace for local, auditable workflows;
-- `nexus-scholar/nexus-web`: Laravel/Inertia hosted product shell;
-- `nexus-scholar/graph-core`: graph data structures and exports;
-- `nexus-scholar/graph-algorithms`: traversal, shortest paths, centrality, components, ordering, and MST algorithms;
-- `nexus-scholar/refmanager`: RIS, BibTeX, CSL-JSON, EndNote XML, and reference-management workflows.
+Research workflows often need repeatable local commands.
 
-This lets the same workflow ideas support different surfaces: a local CLI, a hosted app, package users, and future research-specific integrations.
+An Artisan command can run a search, generate a graph, export a bibliography, print status, or produce a demo artifact. It can be scripted, logged, and documented.
 
-## Auditability Is A Feature
+This is useful before the web product is polished. It lets the team prove the workflow through commands and files instead of only through screens.
 
-Research tooling should make decisions easier to inspect, not harder.
+For public evidence, commands are also easier to show safely. A bounded CLI demo can prove the workflow shape without exposing credentials, private research plans, or a hosted product roadmap.
 
-For Nexus Scholar, that means treating artifacts as first-class outputs: run files, screening decisions, full-text manifests, export history, graph outputs, and project notes. This is why the CLI workspace matters. A hosted UI is useful, but local auditable workflows are important for researchers who need to preserve evidence.
+## Queues Fit Provider And Artifact Work
 
-## The Public Boundary Is Deliberate
+Provider calls, PDF retrieval, text extraction, graph generation, and exports should not all happen inside a web request.
 
-I am keeping the reusable tooling, documentation, and verified public evidence visible.
+Laravel queues are a natural fit for this:
 
-I am not making every product decision public. Hosted product details, private roadmap work, credentials, client data, and unpublished research methods stay controlled until they are mature enough to share.
+- search providers can run in background jobs;
+- retries can be controlled;
+- long-running imports can report progress;
+- failed jobs can be inspected;
+- exports can be generated asynchronously;
+- expensive graph operations can be separated from UI actions.
 
-That boundary is intentional. Open source is useful when it clarifies the work. It is not useful when it exposes sensitive research planning or turns an unfinished product roadmap into noise.
+Research tools need this kind of operational design because many workflows are slow, partial, or dependent on external services.
 
-## Current Direction
+## Policies And Permissions Matter Early
 
-The next useful public work is not a broad claim that the system is finished. It is narrower:
+Even a small review tool eventually needs access control.
 
-- make package boundaries easier to inspect;
-- document workflow examples with real artifacts;
-- keep provider tests and examples reproducible;
-- show how citation graphs and bibliographic exports fit into review workflows;
-- publish writing that is tied to code, commits, and evidence.
+Who can create a project? Who can screen records? Who can change criteria? Who can export the corpus? Who can view full-text artifacts? Who can resolve conflicts?
 
-That is the kind of software I want to build more of: domain-heavy backend systems where correctness, auditability, and research context matter.
+Laravel policies and authorization patterns help make those decisions explicit.
+
+This matters because research workflows often involve collaborators, supervisors, assistants, or external reviewers. Permissions should not be added as an afterthought once sensitive data is already mixed into the product.
+
+## Package Boundaries Keep The Core Reusable
+
+Laravel can host the application, but not every domain concept should live directly inside the app.
+
+Reusable logic can be placed behind package boundaries:
+
+- graph operations;
+- reference management;
+- provider normalization;
+- deduplication;
+- export formatting;
+- screening models.
+
+That keeps the core usable from CLI, web, jobs, tests, and future tools. It also makes the public open-source surface clearer because readers can inspect specific parts of the system without needing the whole hosted product.
+
+## PHP Is Fine When The Boundaries Are Clear
+
+Research software does not become serious because it is written in Python, TypeScript, Rust, or PHP. It becomes serious when the workflow is correct, the artifacts are preserved, and the claims are backed by evidence.
+
+PHP is a practical language for web-backed workflow tools. Laravel adds the operational framework around it. The stack is strong enough when the architecture is clear.
+
+For Nexus Scholar, the stack choice is not about fashion. It is about building a system where systematic-review work can be run, inspected, exported, and explained.

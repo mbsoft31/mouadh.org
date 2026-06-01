@@ -1,80 +1,104 @@
 ---
-title: Full Text Retrieval Needs Legal Boundaries
-description: "Why full-text workflows should preserve source, license, manifest, and failure evidence instead of scraping blindly."
+title: Full-Text Retrieval Needs Legal Boundaries
+description: "Why research tools should separate metadata, lawful full-text access, local artifacts, and user-controlled retrieval."
 pubDate: 2026-06-01
 tags:
+  - Research Software
   - Full Text
-  - Research Workflow
-  - Evidence
+  - Compliance
 evidence:
   - nexus-cli-demo-2026-06-01
 ---
 
-Full-text retrieval is tempting to automate aggressively.
+Full-text retrieval is one of the most useful features a literature-review tool can offer. It is also one of the easiest places to create legal and operational trouble.
 
-For research software, that is the wrong instinct. The goal is not to grab every PDF the system can find. The goal is to retrieve legal open-access artifacts, preserve what happened, and make failures inspectable.
+Metadata is usually safe to store and move within reasonable provider terms. Full-text PDFs are different. They can be open access, subscription access, author manuscripts, publisher versions, institutional copies, or files with unclear redistribution rights.
 
-That boundary matters.
+A research tool should not treat all of those as the same kind of data.
 
-## A Missing PDF Is Still Evidence
+## Metadata And Full Text Are Different Products
 
-A failed full-text fetch is not useless.
+It is tempting to design a review tool as if every record is just a paper object with fields and a PDF. That simplification breaks down quickly.
 
-It can record:
+The metadata may come from Crossref, PubMed, Semantic Scholar, OpenAlex, arXiv, or another provider. The full text may come from a publisher, an open repository, a local upload, an institutional proxy, or the user's own files.
 
-- which source was checked;
-- which URL was attempted;
-- whether the work had an open-access location;
-- why retrieval failed;
-- when the attempt happened;
-- whether a retry is reasonable.
+Those sources have different rules.
 
-That information helps a reviewer understand the workflow later.
+A safe system separates:
 
-## Legal Source Boundaries Matter
+- bibliographic metadata;
+- provider identifiers;
+- open-access links;
+- user-uploaded files;
+- locally cached artifacts;
+- retrieval attempts and outcomes;
+- license or access notes when available.
 
-Research tools should not normalize bad behavior.
+That separation makes the product easier to operate responsibly.
 
-Full-text retrieval should distinguish:
+## Retrieval Should Be Explicit
 
-- legal open-access locations;
-- publisher pages;
-- repository files;
-- metadata-only records;
-- failed requests;
-- unsupported or unsafe sources.
+Automatic PDF fetching can feel convenient, but silent retrieval is risky. Users should be able to see what the tool is doing and why.
 
-The system should make it easier to stay within legal and ethical boundaries, not easier to bypass them.
+A good retrieval workflow records:
 
-## Manifests Are More Important Than Folders
+- the source URL or provider used;
+- whether the file was open access;
+- whether a user uploaded the file manually;
+- retrieval time;
+- content type and size;
+- checksum where useful;
+- failure reason when retrieval fails;
+- whether the artifact is stored, linked, or only referenced.
 
-Saving files into a folder is not enough.
+That evidence is not bureaucratic overhead. It helps users explain how a local corpus was assembled.
 
-A useful retrieval workflow should write a manifest that explains:
+## Do Not Build A Shadow Library By Accident
 
-- work ID;
-- source URL;
-- destination path;
-- content type;
-- file size;
-- status;
-- error message if applicable;
-- retrieval timestamp.
+The worst version of full-text retrieval is a tool that downloads and redistributes PDFs without clear rights. That may look useful in a demo, but it creates legal risk and damages trust.
 
-The manifest turns a file download into an audit artifact.
+A better design supports lawful workflows:
 
-## Full Text Connects To Screening
+- store metadata even when full text is unavailable;
+- prefer open-access sources where terms allow;
+- let users attach files they are allowed to use;
+- record retrieval provenance;
+- avoid redistributing private PDFs publicly;
+- make export behavior explicit.
 
-Full-text retrieval usually happens after title/abstract screening.
+This still gives researchers practical help without pretending every paper can be treated as free content.
 
-That means the full-text artifact should connect back to the screening result, the run ID, and the project corpus. Otherwise the folder of PDFs becomes disconnected from the review workflow.
+## Local Artifacts Are Valuable
 
-This is why full-text commands belong in the same system as search, screening, corpus locks, and exports.
+Keeping legal boundaries does not mean avoiding artifacts. Local artifacts are important for reproducibility and review work.
 
-## The Nexus Direction
+Examples:
 
-Nexus Scholar should treat full-text retrieval as a controlled workflow.
+- a manifest of attempted PDF retrievals;
+- links to open-access versions;
+- extracted text produced from user-authorized files;
+- checksums for local files;
+- notes about unavailable full text;
+- source-specific retrieval logs.
 
-The public CLI command surface already has `nexus:fetch-full-text` and the older `nexus:fetch-pdfs` alias. The important direction is not the name of the command. It is the artifact discipline behind it.
+These artifacts are useful even when the system cannot store or share the PDF itself.
 
-Public demos should stay bounded: show the command shape, show a manifest structure, and avoid any source that would create legal or licensing confusion.
+The key is to preserve the evidence of the retrieval process, not to blur the rights around the content.
+
+## Product Design Should Make The Boundary Visible
+
+The UI and CLI should not hide the legal state of full text.
+
+A reviewer should be able to distinguish:
+
+- no full-text attempt;
+- open-access link found;
+- retrieval failed;
+- user uploaded file;
+- local artifact exists;
+- file is restricted to the private workspace;
+- only metadata is available.
+
+Those states affect what can be exported, shared, or included in a public evidence packet.
+
+Full-text retrieval is not only a technical feature. It is a boundary-management feature. Research tools that handle it well will be more useful because they are more careful.

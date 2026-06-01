@@ -10,17 +10,21 @@ evidence:
   - nexus-cli-demo-2026-06-01
 ---
 
-Hosted web products are useful. They make workflows easier to discover, easier to share, and easier to operate with teams.
+If you are building research software, a web interface is rarely enough.
 
-But for research software, a CLI still matters.
+The web app matters. It gives teams a shared workspace, lowers the learning curve, and makes review tasks easier to coordinate. But a web app also hides a lot of important behavior behind buttons. That is fine for usability. It is weaker for auditability.
 
-The command line is a simple way to prove that a workflow is not only a screen. It can be run, repeated, inspected, logged, and connected to files. That matters when the output is not just a UI state, but a research artifact.
+A command-line workflow gives the system a second surface: one where operations are explicit, repeatable, and easier to capture as evidence.
 
-## A CLI Makes The Workflow Explicit
+That is why CLI design still matters for research tools, even when the long-term product is hosted and collaborative.
 
-A web UI often hides workflow steps behind buttons. That is good for usability, but weak for evidence.
+## The Command Line Forces The Workflow To Be Named
 
-A CLI makes the workflow visible:
+In a web product, "Run search" can mean many things. It might contact one provider or five. It might normalize records, deduplicate them, enrich metadata, write files, update a database, and trigger a background job.
+
+That is a lot of behavior behind one button.
+
+A CLI forces the product to expose real verbs:
 
 ```bash
 php artisan nexus:search
@@ -31,55 +35,66 @@ php artisan nexus:graph
 php artisan nexus:export-bibliography
 ```
 
-Even when these commands become friendlier over time, their existence forces the system to expose the real operations.
+Those names are not just developer conveniences. They define the workflow vocabulary. They make it clear that search, screening, corpus locking, graph generation, and bibliography export are separate operations with separate evidence trails.
 
-## Files Are Evidence
+When the command surface is clean, the web app becomes easier to design because the underlying workflow is already explicit.
 
-Research workflows produce files:
+## A Research Workflow Should Leave Files Behind
 
-- run JSON;
-- screening decisions;
-- graph artifacts;
-- export history;
-- full-text manifests;
-- wiki pages;
-- audit notes.
+A useful research tool should not only update a dashboard. It should leave artifacts that can survive outside the product.
 
-These files should not be accidental byproducts. They should be designed outputs.
+Examples include:
 
-If a researcher needs to explain what happened later, a local file trail is easier to preserve than a memory of what was clicked in a web interface.
+- search run JSON;
+- normalized provider records;
+- deduplication decisions;
+- screening criteria and reviewer decisions;
+- citation graph exports;
+- bibliography files;
+- full-text retrieval manifests;
+- audit notes and status summaries.
 
-## A CLI Reduces Product Theater
+Files are not old-fashioned. They are portable evidence. They can be archived, attached to a report, checked into a private repository, inspected by a collaborator, or regenerated during debugging.
 
-It is easy to build a product surface before the underlying workflow is solid.
+If a team cannot explain later what happened during a review workflow, the product has failed a basic research requirement.
 
-A CLI makes that harder. The command either runs or it does not. The output either exists or it does not. The generated artifact either has a useful shape or it does not.
+## CLI Workflows Reduce Product Theater
 
-This is why I see Nexus Scholar CLI as part of the main architecture, not only a developer convenience.
+It is easy to build a convincing interface before the underlying system is real. A dashboard can show cards, filters, charts, and status labels while the actual workflow is still fragile.
 
-## The Web App Still Matters
+A CLI makes that harder.
 
-The point is not CLI instead of web.
+The command either runs or fails. The output file either exists or does not. The export either has the expected fields or it does not. The graph artifact either contains useful nodes and edges or it is empty decoration.
 
-The point is CLI and web with a shared workflow core:
+That pressure is healthy. It keeps the system grounded in operations rather than presentation.
 
-- CLI for reproducibility and artifact inspection;
-- web for collaboration, dashboards, and guided workflows;
-- packages for reusable domain logic;
-- evidence packets for public explanation.
+For a tool like Nexus Scholar, the CLI is not just a developer backdoor. It is a way to prove that the workflow exists independently of a polished screen.
 
-That split keeps the system honest.
+## The Web App Still Has A Different Job
 
-## The Public Demo Path
+The argument is not CLI versus web. Each surface should do the job it is best suited for.
 
-The safest public demo is not a large live provider search with credentials. It is a bounded workflow that shows the command surface, input shape, output files, and claim boundaries.
+Use the CLI for reproducible runs, local evidence, scripted workflows, artifact inspection, and low-risk public demos.
 
-A good first demo should show:
+Use the web app for collaboration, review queues, dashboards, guided screening, team permissions, and long-running hosted workflows.
 
-- command inventory;
+Use packages for reusable domain logic, so neither the CLI nor the web app owns the core behavior.
+
+That split prevents a common failure: a product where the UI becomes the architecture.
+
+## What A Good Public CLI Demo Should Show
+
+A safe public demo does not need live provider credentials or sensitive research data. It can use bounded examples and still prove substance.
+
+A good first demo can show:
+
+- the command inventory;
 - local status output;
-- screening decision format;
-- graph artifact shape;
-- export-history read surface.
+- a sample screening-decision format;
+- a graph artifact shape;
+- export-history reads;
+- known limits and missing pieces.
 
-That proves enough without exposing private research plans or credentials.
+That is enough for a reader to see the system as real workflow software rather than a vague promise.
+
+For research tools, auditability is not a bonus feature. It is part of the product contract. A CLI is one of the simplest ways to keep that contract visible.
