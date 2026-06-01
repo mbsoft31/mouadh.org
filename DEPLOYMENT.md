@@ -42,6 +42,49 @@ For a static host, configure:
 
 Do not change MX records unless setting up email intentionally.
 
+## Hostinger DNS Records For VPS Deploy
+
+Assigned nameservers:
+
+- `ns1.dns-parking.com`
+- `ns2.dns-parking.com`
+
+Current parking IP observed before update:
+
+- `mouadh.org` -> `2.57.91.91`
+- `mouadh.info` -> `2.57.91.91`
+- `mouadh.shop` -> `2.57.91.91`
+
+VPS target:
+
+- `31.97.193.211`
+- reverse DNS: `srv907650.hstgr.cloud`
+
+Set these records for the canonical domain:
+
+| Domain | Type | Name/Host | Value/Target | TTL |
+| --- | --- | --- | --- | --- |
+| `mouadh.org` | A | `@` | `31.97.193.211` | 300 or default |
+| `mouadh.org` | A | `www` | `31.97.193.211` | 300 or default |
+
+For aliases, use either Hostinger redirects or point them to the same VPS and configure server-side redirects:
+
+| Domain | Type | Name/Host | Value/Target | TTL |
+| --- | --- | --- | --- | --- |
+| `mouadh.info` | A | `@` | `31.97.193.211` | 300 or default |
+| `mouadh.info` | A | `www` | `31.97.193.211` | 300 or default |
+| `mouadh.shop` | A | `@` | `31.97.193.211` | 300 or default |
+| `mouadh.shop` | A | `www` | `31.97.193.211` | 300 or default |
+
+If Hostinger already has CNAME records for `www`, either keep `www -> @` if supported or replace with the A records above. Do not create duplicate conflicting records for the same host/type.
+
+Server-side redirect intent:
+
+- `http://mouadh.info/*` -> `https://mouadh.org/*`
+- `https://mouadh.info/*` -> `https://mouadh.org/*`
+- `http://mouadh.shop/*` -> `https://mouadh.org/*`
+- `https://mouadh.shop/*` -> `https://mouadh.org/*`
+
 ## Validation
 
 After deploy:
